@@ -6,6 +6,7 @@ import socket from "../../../lib/socket";
 import { motion } from "framer-motion";
 import { GoVerified } from "react-icons/go";
 import { RxCross1 } from "react-icons/rx";
+import Header from "@/components/Header/Header";
 
 export default function RoomPage() {
   const router = useRouter();
@@ -116,28 +117,7 @@ export default function RoomPage() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full px-10 py-4 justify-between flex items-center gap-4 z-50">
-        <button
-          onClick={() => router.push("/")}
-          className="text-[#DF0979] hover:underline cursor-pointer transition p-2"
-        >
-          Home
-        </button>
-        <div className="flex">
-          <button
-            onClick={() => setShowUserModal(true)}
-            className="text-black py-2 px-5 transition-all cursor-pointer mr-6 hover:bg-[#DF0979] hover:text-white rounded-2xl font-bold"
-          >
-            {username}
-          </button>
-          <button
-            onClick={() => setShowInviteModal(true)}
-            className="font-bold py-2 px-3 text-[#DF0979] hover:bg-[#DF0979] hover:text-white transition-all cursor-pointer border-2 border-[#DF0979] rounded-2xl"
-          >
-            Convide o pessoal
-          </button>
-        </div>
-      </header>
+      <Header />
 
       {copySuccess && (
         <div className="fixed top-16 right-6 bg-[#DF0979] text-white px-4 py-2 rounded shadow z-50 select-none">

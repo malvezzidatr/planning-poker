@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuid } from "uuid";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import Header from "@/components/Header/Header";
 
 export default function Home() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-300 flex items-center justify-center p-6">
+      <Header />
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
         <h1 className="text-3xl font-bold text-primary mb-6 text-black">Planning Poker</h1>
 
@@ -46,6 +49,11 @@ export default function Home() {
           Entrar em sala existente
         </button>
       </div>
+      <div onClick={() => router.push('/terms')} className="cursor-pointer absolute bottom-6 left-6 text-gray-600 gap-2 flex items-center">
+        <IoMdInformationCircleOutline />
+        <p>Termos e condições</p>
+      </div>
+      <p className="text-gray-600 absolute right-6 bottom-6">Desenvolvido por Caio Malvezzi</p>
     </div>
   );
 }
