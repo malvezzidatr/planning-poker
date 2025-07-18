@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import socket from "../../../lib/socket";
 import { motion } from "framer-motion";
 import { GoVerified } from "react-icons/go";
-import { BiCoffee } from "react-icons/bi";
+import { RxCross1 } from "react-icons/rx";
 
 export default function RoomPage() {
   const router = useRouter();
@@ -19,10 +19,27 @@ export default function RoomPage() {
   const [revealed, setRevealed] = useState(false);
   const [votedUsers, setVotedUsers] = useState<Set<string>>(new Set());
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [focusNewUsername, setFocusNewUsername] = useState(false);
 
   useEffect(() => {
     if (!roomId || typeof roomId !== "string") return;
 
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername && !joined) {
+      setUsername(storedUsername);
+      socket.emit("joinRoom", { roomId, username: storedUsername });
+      setJoined(true);
+    }
+
+    setIsLoading(false);
+  }, [roomId])
+
+  useEffect(() => {
     socket.on("roomUpdate", (usernames: string[]) => {
       setUsers(usernames);
     });
@@ -51,8 +68,17 @@ export default function RoomPage() {
     };
   }, [roomId]);
 
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#DF0979] border-opacity-75"></div>
+      </main>
+    )
+  }
+
   const joinRoom = () => {
     socket.emit("joinRoom", { roomId, username });
+    localStorage.setItem("username", username);
     setJoined(true);
   };
 
@@ -80,17 +106,37 @@ export default function RoomPage() {
     }
   };
 
+  const changeUsername = () => {
+    if (!newUsername || newUsername.trim() === "") return;
+    setUsername(newUsername);
+    localStorage.setItem("username", newUsername);
+    socket.emit("changeUsername", { roomId, oldUsername: username, newUsername });
+    setShowUserModal(false);
+  }
+
   return (
     <>
-      <header className="fixed top-0 left-0 w-full bg-white shadow px-10 py-6 flex items-center gap-4 z-50">
+      <header className="fixed top-0 left-0 w-full px-10 py-4 justify-between flex items-center gap-4 z-50">
         <button
           onClick={() => router.push("/")}
-          className="text-[#DF0979] hover:underline cursor-pointer transition"
+          className="text-[#DF0979] hover:underline cursor-pointer transition p-2"
         >
           Home
         </button>
-        <span className="text-[#DF0979] select-none">{">"}</span>
-        <span className="font-bold truncate max-w-xs text-[#DF0979] ">{roomId}</span>
+        <div className="flex">
+          <button
+            onClick={() => setShowUserModal(true)}
+            className="text-black py-2 px-5 transition-all cursor-pointer mr-6 hover:bg-[#DF0979] hover:text-white rounded-2xl font-bold"
+          >
+            {username}
+          </button>
+          <button
+            onClick={() => setShowInviteModal(true)}
+            className="font-bold py-2 px-3 text-[#DF0979] hover:bg-[#DF0979] hover:text-white transition-all cursor-pointer border-2 border-[#DF0979] rounded-2xl"
+          >
+            Convide o pessoal
+          </button>
+        </div>
       </header>
 
       {copySuccess && (
@@ -132,7 +178,7 @@ export default function RoomPage() {
               <div className="relative w-80 h-80 mx-auto my-10">
                 <div
                   style={{ backgroundColor: "rgba(36, 47, 102, 0.35)" }}
-                  className="border-4 border-[#242F66] shadow-xl absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-[500px] h-[500px] flex items-center justify-center"
+                  className="border-4 border-[#242F66] shadow-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-[500px] h-[500px] flex items-center justify-center"
                 >
                   <button
                     onClick={votes ? resetVotes : revealVotes}
@@ -150,12 +196,12 @@ export default function RoomPage() {
                   return (
                     <div
                       key={user}
-                      className="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 transform origin-center"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform origin-center"
                       style={{
                         transform: `rotate(${angle}deg) translate(15rem) rotate(-${angle}deg)`,
                       }}
                     >
-                      <div className="w-[80px] h-[120px] [perspective:1000px]">
+                      <div className="w-[65px] h-[90px] [perspective:1000px]">
                         <motion.div
                           className="relative w-full h-full"
                           animate={{ rotateY: votes ? 180 : 0 }}
@@ -177,10 +223,10 @@ export default function RoomPage() {
                           >
                             <p style={{color: hasVoted ? "white" : "#DF0979" }} className="text-sm font-bold text-center">{user}</p>
                             {hasVoted && (
-                              <GoVerified size={50} className="mt-2.5 text-white" />
+                              <GoVerified size={25} className="mt-1 text-white" />
                             )}
                             {!hasVoted && !votes && (
-                              <span className="text-6xl text-[#DF0979]">?</span>
+                              <span className="text-4xl text-[#DF0979]">?</span>
                             )}
                           </motion.div>
 
@@ -191,8 +237,8 @@ export default function RoomPage() {
                               backfaceVisibility: "hidden",
                             }}
                           >
-                            <p className="text-sm mt-2 font-bold text-center">{user}</p>
-                            <p className="text-6xl font-bold">{vote || "?"}</p>
+                            <p className="text-sm mt-1 font-bold text-center">{user}</p>
+                            <p className="text-4xl font-bold">{vote || "?"}</p>
                           </div>
                         </motion.div>
                       </div>
@@ -203,26 +249,75 @@ export default function RoomPage() {
             </>
           )}
         </div>
-        
-          <div className="fixed right-10 top-24 flex flex-col items-center">
-            <h2 className="text-lg font-medium mb-2 text-black">Escolha sua carta:</h2>
-            <div className="flex w-[165px] flex-wrap gap-6 mb-4">
-              {["1", "2", "3", "5", "8", "13", "?", "☕️"].map((value) => (
-                <button
-                  key={value}
-                  onClick={() => submitVote(value)}
-                  className={`w-[70px] h-[100px] rounded text-[#DF0979] text-[20px] cursor-pointer ${
-                    card === value
-                      ? "bg-[#DF0979] text-white"
-                      : "border-[#DF0979] hover:bg-[#DF0979] bg-white hover:text-white transition border-2"
-                  }`}
-                >
-                  {value}
-                </button>
-              ))}
+        {
+          joined && (
+            <div className="fixed bottom-0 flex items-center">
+              <div className="flex flex-wrap gap-4 mb-4">
+                {["1", "2", "3", "5", "8", "13", "?", "☕️"].map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => submitVote(value)}
+                    className={`w-[60px] h-[90px] rounded text-[#DF0979] text-[20px] cursor-pointer ${
+                      card === value
+                        ? "bg-[#DF0979] text-white"
+                        : "border-[#DF0979] hover:bg-[#DF0979] bg-white hover:text-white transition border-2"
+                    }`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )
+        }
       </main>
+      {showUserModal && (
+        <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}} className="fixed inset-0 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded shadow max-w-sm w-full relative">
+            <button
+              onClick={() => setShowUserModal(false)}
+              className="absolute top-6 right-6 text-gray-600 hover:text-black cursor-pointer"
+            >
+              <RxCross1 size={20} />
+            </button>
+            <h2 className="text-lg font-bold mb-2 text-black">Usuário</h2>
+            <p className="text-gray-800">Digite seu novo username</p>
+            <input style={{borderColor: focusNewUsername ? '#DF0979' : undefined}} onFocus={() => setFocusNewUsername(true)} onBlur={() => setFocusNewUsername(false)} className="rounded w-full p-2 border-2 border-[#ECECEC] text-black outline-0" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
+            <button
+              onClick={changeUsername}
+              className="w-full text-white p-3 mt-4 cursor-pointer bg-[#DF0979] rounded">
+              Novo username
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showInviteModal && (
+        <div
+          style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
+          className="fixed inset-0 flex justify-center items-center z-50"
+        >
+          <div className="bg-white p-6 px-8 rounded-2xl shadow w-[580px] h-[320px] relative flex items-center flex-col justify-center">
+            <button
+              onClick={() => setShowInviteModal(false)}
+              className="absolute top-6 right-6 text-gray-600 hover:text-black cursor-pointer"
+            >
+              <RxCross1 size={20} />
+            </button>
+            <h2 className="text-2xl text-black font-bold self-start mb-10">Convide o pessoal</h2>
+            <div style={{ borderColor: isFocused ? "#DF0979" : undefined }} className="p-2 border-2 rounded w-full mb-6 relative">
+              <p className="absolute px-3 rounded-full text-[12px] text-white bg-[#DF0979] top-[-10px]">plannig poker url</p>
+              <input onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} className="w-full text-black mt-1 outline-0" value={window.location.href} readOnly />
+            </div>
+            <button
+              onClick={copyLink}
+              className="bg-[#DF0979] text-white py-3 w-full rounded hover:bg-[#BE0867] transition cursor-pointer"
+            >
+              Copiar link
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
