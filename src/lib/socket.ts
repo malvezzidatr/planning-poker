@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3001"); // porta do NestJS
+const socket = io("https://planning-poker-server-55kj.onrender.com/");
 
 export default socket;

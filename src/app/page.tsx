@@ -19,7 +19,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-300 flex items-center justify-center p-6">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
         <h1 className="text-3xl font-bold text-primary mb-6 text-black">Planning Poker</h1>
 
