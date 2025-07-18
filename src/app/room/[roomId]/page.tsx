@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 import { GoVerified } from "react-icons/go";
 import { RxCross1 } from "react-icons/rx";
 import Header from "@/components/Header/Header";
+import { MdAccountCircle } from "react-icons/md";
 
 export default function RoomPage() {
-  const router = useRouter();
   const { roomId } = useParams();
 
   const [username, setUsername] = useState("");
@@ -125,10 +125,10 @@ export default function RoomPage() {
         </div>
       )}
 
-      <main className="min-h-screen bg-gray-300 flex flex-col items-center justify-center p-6 pt-20">
+      <main className="min-h-screen bg-[#F2EBDC] flex flex-col items-center justify-center p-6 pt-20">
         <div className="max-w-xl w-full mb-[100px] text-black">
           {!joined ? (
-            <div className="bg-white p-12 rounded shadow-md">
+            <div className="bg-[#F2EBDC] p-12 rounded shadow-md">
               <h1 className="text-2xl font-bold text-primary mb-4 flex items-center justify-between">
                 Sala {roomId}
                 <button
@@ -157,18 +157,18 @@ export default function RoomPage() {
             <>
               <div className="relative w-80 h-80 mx-auto my-10">
                 <div
-                  style={{ backgroundColor: "rgba(36, 47, 102, 0.35)" }}
-                  className="border-4 border-[#242F66] shadow-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-[500px] h-[500px] flex items-center justify-center"
+                  
+                  className="bg-[#F2EBDC] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center"
                 >
                   <button
                     onClick={votes ? resetVotes : revealVotes}
-                    className="bg-[#242F66] transition text-white py-4 px-10 rounded hover:bg-[#3A4783] cursor-pointer"
+                    className="bg-[#5944A6] transition text-white w-50 h-30 rounded-full hover:opacity-85 cursor-pointer"
                   >
                     {votes ? "Nova Rodada": "Revelar Votos"}
                   </button>
                 </div>
                 {users.map((user, index) => {
-                  const total = users.length;
+                  const total = users.length ;
                   const angle = (360 / total) * index;
                   const hasVoted = votedUsers.has(user);
                   const vote = votes?.[user];
@@ -178,7 +178,7 @@ export default function RoomPage() {
                       key={user}
                       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform origin-center"
                       style={{
-                        transform: `rotate(${angle}deg) translate(15rem) rotate(-${angle}deg)`,
+                        transform: `rotate(${angle}deg) translate(13rem) rotate(-${angle}deg)`,
                       }}
                     >
                       <div className="w-[65px] h-[90px] [perspective:1000px]">
@@ -194,24 +194,24 @@ export default function RoomPage() {
                             className="absolute w-full h-full flex flex-col items-center justify-center rounded shadow text-sm border-2"
                             style={{
                               backfaceVisibility: "hidden",
-                              color: hasVoted ? "white" : "#DF0979",
+                              color: hasVoted ? "white" : "#5944A6",
                             }}
                             animate={{
-                              backgroundColor: hasVoted ? "#DF0979" : "#FFFFFF",
+                              backgroundColor: hasVoted ? "#5944A6" : "#FFFFFF",
                             }}
                             transition={{ duration: 0.6 }}
                           >
-                            <p style={{color: hasVoted ? "white" : "#DF0979" }} className="text-sm font-bold text-center">{user}</p>
+                            <p style={{color: hasVoted ? "white" : "#5944A6" }} className="text-sm font-bold text-center">{user}</p>
                             {hasVoted && (
                               <GoVerified size={25} className="mt-1 text-white" />
                             )}
                             {!hasVoted && !votes && (
-                              <span className="text-4xl text-[#DF0979]">?</span>
+                              <span className="text-4xl text-[#5944A6]">?</span>
                             )}
                           </motion.div>
 
                           <div
-                            className="absolute w-full h-full flex flex-col items-center justify-center rounded shadow text-sm border-2 border-white bg-[#DF0979] text-white"
+                            className="absolute w-full h-full flex flex-col items-center justify-center rounded shadow text-sm border-2 bg-[#5944A6] text-white"
                             style={{
                               transform: "rotateY(180deg)",
                               backfaceVisibility: "hidden",
@@ -232,15 +232,18 @@ export default function RoomPage() {
         {
           joined && (
             <div className="fixed bottom-0 flex items-center">
+              <div onClick={() => setShowUserModal(true)}>
+                <MdAccountCircle size={60} color="#5944A6" className="mr-10 mb-4 cursor-pointer" />
+              </div>
               <div className="flex flex-wrap gap-4 mb-4">
-                {["1", "2", "3", "5", "8", "13", "?", "☕️"].map((value) => (
+                {["1", "2", "3", "5", "8", "13", "21", "?", "☕️"].map((value) => (
                   <button
                     key={value}
                     onClick={() => submitVote(value)}
-                    className={`w-[60px] h-[90px] rounded text-[#DF0979] text-[20px] cursor-pointer ${
+                    className={`w-[60px] h-[90px] rounded text-[20px] shadow-xs cursor-pointer text-white ${
                       card === value
-                        ? "bg-[#DF0979] text-white"
-                        : "border-[#DF0979] hover:bg-[#DF0979] bg-white hover:text-white transition border-2"
+                        ? "bg-[#5944A6]"
+                        : "border-[#5944A6] hover:bg-[#5944A6] bg-[#8E79D9] hover:translate-y-[-10px] transition border-2"
                     }`}
                   >
                     {value}
@@ -253,7 +256,7 @@ export default function RoomPage() {
       </main>
       {showUserModal && (
         <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}} className="fixed inset-0 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded shadow max-w-sm w-full relative">
+          <div className="bg-[#F2EBDC] p-6 rounded shadow max-w-sm w-full relative">
             <button
               onClick={() => setShowUserModal(false)}
               className="absolute top-6 right-6 text-gray-600 hover:text-black cursor-pointer"
@@ -277,7 +280,7 @@ export default function RoomPage() {
           style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
           className="fixed inset-0 flex justify-center items-center z-50"
         >
-          <div className="bg-white p-6 px-8 rounded-2xl shadow w-[580px] h-[320px] relative flex items-center flex-col justify-center">
+          <div className="bg-[#F2EBDC] p-6 px-8 rounded-2xl shadow w-[580px] h-[320px] relative flex items-center flex-col justify-center">
             <button
               onClick={() => setShowInviteModal(false)}
               className="absolute top-6 right-6 text-gray-600 hover:text-black cursor-pointer"
