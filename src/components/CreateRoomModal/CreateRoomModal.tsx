@@ -10,7 +10,7 @@ interface ICreateRoomModal {
   headerDescription?: string;
   isOpen: boolean;
   onClose: () => void;
-  handlePress: () => void;
+  handlePress: (username: string) => void;
 }
 
 export const CreateRoomModal = ({
@@ -62,7 +62,7 @@ export const CreateRoomModal = ({
         </div>
         <div className="flex justify-between mt-6 gap-4">
           <Button full text="Cancel" onClick={onClose} />
-          <Button full text="Create Room" iconName="plus" onClick={handlePress} />
+          <Button full text="Create Room" iconName="plus" onClick={() => handlePress(name)} />
         </div>
       </div>
     </div>

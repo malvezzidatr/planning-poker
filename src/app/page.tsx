@@ -8,6 +8,7 @@ import { Button } from "@/components/Button/Button";
 import { Input } from "@/components/Input/Input";
 import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
 import { CreateRoomModal } from "@/components/CreateRoomModal/CreateRoomModal";
+import socket from "@/lib/socket";
 
 export default function Home() {
   const router = useRouter();
@@ -16,15 +17,15 @@ export default function Home() {
   const [isJoinRoomModalOpen, setIsJoinRoomModalOpen] = useState(false);
   const [roomCode, setRoomCode] = useState("");
 
-  const createRoom = () => {
+  const createRoom = (username: string) => {
     const newRoomId = uuid().slice(0, 6);
     router.push(`/room/${newRoomId}`);
+    localStorage.setItem("username", username);
   };
 
-  const joinRoom = () => {
-    if (roomCode.trim()) {
-      router.push(`/room/${roomCode.trim()}`);
-    }
+  const joinRoom = (username: string) => {
+    socket.emit("joinRoom", { roomId: roomCode.trim(), username });
+    router.push(`/room/${roomCode.trim()}`);
   };
 
   const handleKeyDown = (event) => {
