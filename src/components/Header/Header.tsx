@@ -11,10 +11,11 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed left-0 top-0 w-full py-4 px-12 bg-[#5944A6] shadow-md flex items-center z-50">
-      <div onClick={handleClick} className="flex items-center gap-2 cursor-pointer">
-        <Image className="cursor-pointer" width={50} height={50} src={'/favicon-80x80.png'} alt="logo" />
-        <p className="text-white">Planning Poker App</p>
+    <header className="fixed left-0 top-0 w-full py-5 px-24 bg-[#f9FAFB] shadow-md flex z-50 items-center justify-between">
+      <p className="text-[#004593] font-bold text-xl cursor-pointer">Planning Poker</p>
+      <div className="text-black flex gap-8">
+        <p>Home</p>
+        <p>Terms of Use</p>
       </div>
     </header>
   )

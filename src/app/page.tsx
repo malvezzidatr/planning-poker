@@ -2,12 +2,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuid } from "uuid";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import Header from "@/components/Header/Header";
+import Image from "next/image";
+import { Button } from "@/components/Button/Button";
+import { Input } from "@/components/Input/Input";
+import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
+import { CreateRoomModal } from "@/components/CreateRoomModal/CreateRoomModal";
 
 export default function Home() {
   const router = useRouter();
   const [roomInput, setRoomInput] = useState("");
+  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [isJoinRoomModalOpen, setIsJoinRoomModalOpen] = useState(false);
+  const [roomCode, setRoomCode] = useState("");
 
   const createRoom = () => {
     const newRoomId = uuid().slice(0, 6);
@@ -15,45 +22,47 @@ export default function Home() {
   };
 
   const joinRoom = () => {
-    if (roomInput.trim()) {
-      router.push(`/room/${roomInput.trim()}`);
+    if (roomCode.trim()) {
+      router.push(`/room/${roomCode.trim()}`);
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if (roomCode.trim()) {
+        setIsJoinRoomModalOpen(true);
+      }
+    }
+  };
+  
   return (
-    <div className="min-h-screen bg-gray-300 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-300 flex">
       <Header />
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
-        <h1 className="text-3xl font-bold text-primary mb-6 text-black">Planning Poker</h1>
-
-        <button
-          onClick={createRoom}
-          className="bg-[#DF0979] bg-primary text-white w-full py-3 rounded hover:bg-[#BE0867] cursor-pointer transition mb-4"
-        >
-          Criar nova sala
-        </button>
-
-        <div className="relative mb-2">
-          <input
-            type="text"
-            placeholder="Código da sala"
-            className="w-full border border-gray-300 rounded py-2 px-4 placeholder-gray-600 text-gray-800"
-            value={roomInput}
-            onChange={(e) => setRoomInput(e.target.value)}
-          />
+      <div className="bg-[#F3F8FE] px-24 flex items-center justify-between w-full">
+        <div className="w-1/2">
+          <h1 className="text-[#004593] font-bold text-5xl mb-4">Estimate tasks with your team, simplified</h1>
+          <p className="text-[#4B5563] text-xl w-11/12">Planning Poker is a consenseus-based estimation technique for agile teams. Estimate effort or relative size of user stories in a fun, effective way.</p>
+          <div className="mt-8 flex gap-5">
+            <Button full onClick={() => setIsCreateRoomModalOpen(true)} text="Create New Room" iconName="plus" />
+            <Input onKeyDown={handleKeyDown} value={roomCode} setValue={setRoomCode} placeholder="Enter room code" />
+          </div>
         </div>
-        <button
-          onClick={joinRoom}
-          className="bg-[#242F66] text-white w-full py-3 rounded hover:bg-[#151F4F] cursor-pointer transition"
-        >
-          Entrar em sala existente
-        </button>
+        <Image width={450} height={450} alt="teste" src={'/Image_home.png'} />
       </div>
-      <div onClick={() => router.push('/terms')} className="cursor-pointer absolute bottom-6 left-6 text-gray-600 gap-2 flex items-center">
-        <IoMdInformationCircleOutline />
-        <p>Termos e condições</p>
-      </div>
-      <p className="text-gray-600 absolute right-6 bottom-6">Desenvolvido por Caio Malvezzi</p>
+      <JoinRoomModal
+        onClose={() => setIsJoinRoomModalOpen(false)}
+        isOpen={isJoinRoomModalOpen}
+        headerTitle="Join Room"
+        headerDescription="Please provide your details to join the session."
+        handlePress={joinRoom}
+      />
+      <CreateRoomModal
+        onClose={() => setIsCreateRoomModalOpen(false)}
+        isOpen={isCreateRoomModalOpen}
+        headerTitle="Create Room"
+        headerDescription="Set up your planning session and invite your team"
+        handlePress={createRoom}
+      />
     </div>
   );
 }
