@@ -5,6 +5,7 @@ import {
   FaUserAlt,
   FaEye,
   FaCopy,
+  FaRedoAlt,
 } from "react-icons/fa";
 
 const icons = {
@@ -14,6 +15,7 @@ const icons = {
   user: FaUserAlt,
   eye: FaEye,
   copy: FaCopy,
+  refresh: FaRedoAlt,
 } as const;
 
 export type IconName = keyof typeof icons;

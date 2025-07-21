@@ -24,6 +24,7 @@ export default function Home() {
   };
 
   const joinRoom = (username: string) => {
+    localStorage.setItem("username", username);
     socket.emit("joinRoom", { roomId: roomCode.trim(), username });
     router.push(`/room/${roomCode.trim()}`);
   };
