@@ -35,7 +35,7 @@ export default function RoomPage() {
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
   const router = useRouter();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const storedCard = localStorage.getItem("card");
 
@@ -69,6 +69,16 @@ export default function RoomPage() {
       if (votesFromServer[username]) {
         setCard(votesFromServer[username]);
         localStorage.setItem("card", votesFromServer[username]);
+      } else {
+        const storedCard = localStorage.getItem("card");
+        if (storedCard) {
+          setCard(storedCard);
+          socket.emit("vote", {
+            roomId,
+            username,
+            card: storedCard,
+          });
+        }
       }
     });
 
@@ -173,8 +183,6 @@ export default function RoomPage() {
     }
   };
 
-  
-
   const changeUsername = () => {
     if (!newUsername || newUsername.trim() === "") return;
     setUsername(newUsername);
@@ -185,6 +193,8 @@ export default function RoomPage() {
 
   const joinRoom = (username: string) => {
     localStorage.setItem("username", username);
+    setUsername(username);
+    console.log(username);
     socket.emit("joinRoom", { roomId: roomId, username });
     setIsOpenModalJoinRoom(false);
   };
