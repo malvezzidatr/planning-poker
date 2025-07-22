@@ -29,7 +29,7 @@ export default function Home() {
     router.push(`/room/${roomCode.trim()}`);
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       if (roomCode.trim()) {
         setIsJoinRoomModalOpen(true);
