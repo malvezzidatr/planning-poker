@@ -6,6 +6,11 @@ import {
   FaEye,
   FaCopy,
   FaRedoAlt,
+  FaUserFriends,
+  FaHandsHelping,
+  FaChartPie,
+  FaGithub,
+  FaLinkedin,
 } from "react-icons/fa";
 
 const icons = {
@@ -16,6 +21,11 @@ const icons = {
   eye: FaEye,
   copy: FaCopy,
   refresh: FaRedoAlt,
+  groupOfUsers: FaUserFriends,
+  handTogether: FaHandsHelping,
+  chartPie: FaChartPie,
+  github: FaGithub,
+  linkedin: FaLinkedin,
 } as const;
 
 export type IconName = keyof typeof icons;

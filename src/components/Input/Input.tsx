@@ -1,12 +1,12 @@
-import { label } from "framer-motion/client";
 import Icon, { IconName } from "../Icon/Icon";
-
+import React from "react";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   labelText?: string;
   full?: boolean;
   iconName?: IconName;
+  onClickIcon?: () => void;
 }
 
 export const Input = ({
@@ -16,6 +16,7 @@ export const Input = ({
   labelText,
   full,
   iconName,
+  onClickIcon,
   ...props
 }: InputProps) => {
   return (
@@ -32,7 +33,9 @@ export const Input = ({
           className=" bg-red w-10/12 h-full px-4 placeholder text-[#9BA3AF] outline-0 font-bold"
         />
         {iconName && (
-          <Icon className="cursor-pointer" name={iconName} size={14} color="#0067DA" />
+          <button onClick={onClickIcon} className="flex items-center justify-center h-full">
+            <Icon className="cursor-pointer" name={iconName} size={14} color="#0067DA" />
+          </button>
         )}
       </div>
     </div>

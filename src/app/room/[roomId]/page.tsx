@@ -194,7 +194,6 @@ export default function RoomPage() {
   const joinRoom = (username: string) => {
     localStorage.setItem("username", username);
     setUsername(username);
-    console.log(username);
     socket.emit("joinRoom", { roomId: roomId, username });
     setIsOpenModalJoinRoom(false);
   };
@@ -244,7 +243,7 @@ export default function RoomPage() {
               </div>
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
                 <p>Select Vote</p>
-                <div className="flex gap-4 mt-4">
+                <div className="flex justify-between mt-4">
                   {["1", "2", "3", "5", "8", "13", "21", "?"].map((value) => (
                     <Card selectedCard={card} value={value} key={value} onClick={() => submitVote(value)} />
                   ))}
