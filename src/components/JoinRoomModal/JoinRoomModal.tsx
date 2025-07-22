@@ -10,6 +10,7 @@ interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
   handlePress: (username: string) => void;
+  handleCancel?: () => void;
 }
 
 export const JoinRoomModal = ({
@@ -17,7 +18,8 @@ export const JoinRoomModal = ({
   headerDescription,
   isOpen,
   onClose,
-  handlePress
+  handlePress,
+  handleCancel,
 }: IModalProps) => {
   const [name, setName] = useState("");
   const [isPlayer, setIsPlayer] = useState(true);
@@ -53,7 +55,7 @@ export const JoinRoomModal = ({
           </div>
         </div>
         <div className="flex justify-between mt-6 gap-4">
-          <Button full text="Cancel" onClick={onClose} />
+          <Button full text="Cancel" onClick={handleCancel ?? onClose} />
           <Button full text="Join Room" iconName="arrowRight" onClick={() => handlePress(name)} />
         </div>
       </div>

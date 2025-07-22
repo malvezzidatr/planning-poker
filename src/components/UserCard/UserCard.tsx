@@ -23,9 +23,9 @@ export const UserCard = ({
           {isCurrentUser && <p className="text-xs">You</p>}
         </div>
       </div>
-      <div className={`${hasVoted ? 'text-green-500' : 'text-gray-500'}`}>
+      <div className={`${hasVoted ? 'text-green-500' : 'text-yellow-500'}`}>
         {hasVoted !== undefined && (
-          <p className="text-sm">{hasVoted ? 'Voted' : 'Not Voted'}</p>
+          <p className={`text-xs px-3 py-1 rounded-lg ${hasVoted ? 'bg-green-100 border-[1px] border-green-500' : 'bg-yellow-100 border-[1px] border-yellow-500'}`}>{hasVoted ? 'Voted' : 'Not Voted'}</p>
         )}
         {userType && (
           <p className="text-xs">{userType === "guest" ? "Guest" : "Player"}</p>

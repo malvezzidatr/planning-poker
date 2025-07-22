@@ -5,9 +5,6 @@ interface ICardProps {
 }
 
 export const Card = ({ onClick, value, selectedCard }: ICardProps) => {
-  if (value === selectedCard) {
-    console.log("Selected card:", value);
-  }
   return (
     <div
       onClick={onClick}

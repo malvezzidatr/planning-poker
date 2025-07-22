@@ -13,6 +13,7 @@ import { UserCard } from "@/components/UserCard/UserCard";
 import { UserCardVotes } from "@/components/UserCardVotes/UserCardVotes";
 import { Card } from "@/components/Card/Card";
 import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
+import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -31,22 +32,70 @@ export default function RoomPage() {
   const [isFocused, setIsFocused] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [focusNewUsername, setFocusNewUsername] = useState(false);
+  const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
+  const router = useRouter();
 
   useLayoutEffect(() => {
     const storedUsername = localStorage.getItem("username");
+    const storedCard = localStorage.getItem("card");
+
     if (storedUsername) {
       setUsername(storedUsername);
       socket.emit("joinRoom", { roomId, username: storedUsername });
+
+      if (storedCard) {
+        socket.emit("vote", {
+          roomId,
+          username: storedUsername,
+          card: storedCard
+        });
+        setCard(storedCard);
+      }
+    } else {
+      setIsOpenModalJoinRoom(true);
     }
 
     setIsLoading(false);
-  }, [])
+  }, [roomId]);
 
   useEffect(() => {
-    socket.on("roomUpdate", (usernames: string[]) => {
-      setUsers(usernames);
+    socket.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }) => {
+      setRevealed(revealedFromServer);
+      setVotes(votesFromServer);
+
+      const voted = Object.entries(votesFromServer).filter(([_, value]) => value !== "");
+      setVotedUsers(new Set(voted.map(([user]) => user)));
+
+      if (votesFromServer[username]) {
+        setCard(votesFromServer[username]);
+        localStorage.setItem("card", votesFromServer[username]);
+      }
     });
 
+    return () => {
+      socket.off("roomState");
+    };
+  }, [username]);
+
+  useEffect(() => {
+    const handleRoomUpdate = (usernames: string[]) => {
+      setUsers(usernames);
+    };
+
+    socket.on("roomUpdate", handleRoomUpdate);
+
+    return () => {
+      socket.off("roomUpdate", handleRoomUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      socket.emit("leaveRoom");
+    };
+  }, []);
+
+  useEffect(() => {
     socket.on("revealVotes", (voteMap: Record<string, string>) => {
       setVotes(voteMap);
       setRevealed(true);
@@ -57,6 +106,7 @@ export default function RoomPage() {
       setCard("");
       setRevealed(false);
       setVotedUsers(new Set());
+      localStorage.removeItem("card");
     });
 
     socket.on("userVoted", (user: string) => {
@@ -71,6 +121,25 @@ export default function RoomPage() {
     };
   }, [roomId]);
 
+  useEffect(() => {
+    const handleVotesUpdate = (votes: Record<string, string>) => {
+      setVotes(votes);
+      const voted = Object.entries(votes).filter(([_, value]) => value !== "");
+      setVotedUsers(new Set(voted.map(([user]) => user)));
+
+      if (votes[username] && votes[username] !== card) {
+        setCard(votes[username]);
+        localStorage.setItem("card", votes[username]);
+      }
+    };
+
+    socket.on('votesUpdate', handleVotesUpdate);
+
+    return () => {
+      socket.off('votesUpdate', handleVotesUpdate);
+    };
+  }, [username, card]);
+
   if (isLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -81,6 +150,7 @@ export default function RoomPage() {
 
   const submitVote = (value: string) => {
     setCard(value);
+    localStorage.setItem("card", value);
     socket.emit("vote", { roomId, username, card: value });
   };
 
@@ -95,7 +165,7 @@ export default function RoomPage() {
   const copyLink = async () => {
     if (!window || !roomId) return;
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(roomId as string);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch {
@@ -113,6 +183,12 @@ export default function RoomPage() {
     setShowUserModal(false);
   }
 
+  const joinRoom = (username: string) => {
+    localStorage.setItem("username", username);
+    socket.emit("joinRoom", { roomId: roomId, username });
+    setIsOpenModalJoinRoom(false);
+  };
+
   return (
     <>
       <Header />
@@ -120,7 +196,7 @@ export default function RoomPage() {
         <div className="w-full mx-auto mt-28 text-black rounded-lg shadow-xs">
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
             <p className="font-bold text-2xl">Room: <span className="text-blue-500 font-bold">{roomId}</span></p> 
-            <Button onClick={copyLink} text="Copy Link" iconName="copy" />
+            <Button onClick={copyLink} text="Copy room" iconName="copy" />
           </div>
           <div className="flex gap-8 mt-6">
             <div className="flex-col">
@@ -128,7 +204,7 @@ export default function RoomPage() {
                 <p className="font-bold">Players ({users.length})</p>
                 {users.map((user, index) => {
                   return (
-                    <UserCard key={index} username={user} isCurrentUser={user === username} />
+                    <UserCard key={index} username={user} isCurrentUser={user === username} hasVoted={votedUsers.has(user)} />
                   );
                 })}
               </div>
@@ -143,7 +219,7 @@ export default function RoomPage() {
                         key={index}
                         isCurrentUser={user === username}
                         username={user}
-                        vote={votes ? votes[user] : undefined}
+                        vote={revealed ? votes?.[user] : undefined}
                       />
                     )}
                   )}
@@ -180,6 +256,14 @@ export default function RoomPage() {
           </div>
         </div>
       </div>
+      <JoinRoomModal
+        onClose={() => setIsOpenModalJoinRoom(false)}
+        isOpen={isOpenModalJoinRoom}
+        headerTitle="Join Room"
+        headerDescription="Please provide your details to join the session."
+        handlePress={joinRoom}
+        handleCancel={() => router.push('/')}
+      />
     </>
   );
 }
