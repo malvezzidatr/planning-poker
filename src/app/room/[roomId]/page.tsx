@@ -14,6 +14,8 @@ import { UserCardVotes } from "@/components/UserCardVotes/UserCardVotes";
 import { Card } from "@/components/Card/Card";
 import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
 import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
+import Icon from "@/components/Icon/Icon";
+import { VoteResult } from "@/components/VoteResult/VoteResult";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -218,9 +220,24 @@ export default function RoomPage() {
                 })}
               </div>
             </div>
+            
             <div className="flex-col w-full">
               <div className="bg-white w-full rounded-lg shadow-sm p-6">
-                <p>Individual Votes</p>
+                <div className="flex items-center gap-2">
+                  <Icon name="chartPie" color="#0368DB" size={20} />
+                  <p>Voting Results</p>
+                </div>
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  <VoteResult vote="5" color="green" label="Most Voted" />
+                  <VoteResult vote="5" color="blue" label="Average" />
+                  <VoteResult vote="5" color="purple" label="Total Votes" />
+                </div>
+              </div>
+              <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
+                <div className="flex items-center gap-2">
+                  <Icon name="groupOfUsers" color="#0368DB" size={20} />
+                  <p>Individual Votes</p>
+                </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   {users.map((user, index) => {
                     return (
@@ -234,6 +251,7 @@ export default function RoomPage() {
                   )}
                 </div>
               </div>
+              
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
                 <div className="flex justify-between items-center mb-4">
                   <p>Voting session</p>
@@ -242,7 +260,9 @@ export default function RoomPage() {
                 <ProgressBar value={(votedUsers.size / users.length) * 100} color="bg-green-500" />
               </div>
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
-                <p>Select Vote</p>
+                <div className="flex items-center gap-2">
+                  <p>Select Vote</p>
+                </div>
                 <div className="flex justify-between mt-4">
                   {["1", "2", "3", "5", "8", "13", "21", "?"].map((value) => (
                     <Card selectedCard={card} value={value} key={value} onClick={() => submitVote(value)} />

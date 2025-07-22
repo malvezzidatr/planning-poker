@@ -61,8 +61,8 @@ export const CreateRoomModal = ({
           </div>
         </div>
         <div className="flex justify-between mt-6 gap-4">
-          <Button full text="Cancel" onClick={onClose} />
-          <Button full text="Create Room" iconName="plus" onClick={() => handlePress(name)} />
+          <Button variant="secondary" textCenter full text="Cancel" onClick={onClose} />
+          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name)} />
         </div>
       </div>
     </div>
