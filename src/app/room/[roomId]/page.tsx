@@ -34,12 +34,9 @@ export default function RoomPage() {
   const [revealed, setRevealed] = useState(false);
   const [votedUsers, setVotedUsers] = useState<Set<string>>(new Set());
   const [copySuccess, setCopySuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showUserModal, setShowUserModal] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const [newUsername, setNewUsername] = useState("");
-  const [focusNewUsername, setFocusNewUsername] = useState(false);
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
   const [averageVotes, setAverageVotes] = useState(0);
   const [mostVoted, setMostVoted] = useState(0);
@@ -49,8 +46,9 @@ export default function RoomPage() {
     const storedUsername = localStorage.getItem("username");
     const storedCard = localStorage.getItem("card");
     const role = localStorage.getItem("role");
+    const lastRoom = localStorage.getItem("room");
 
-    if (storedUsername) {
+    if (storedUsername && roomId === lastRoom) {
       setUsername(storedUsername);
       socket.emit("joinRoom", { roomId, username: storedUsername, role });
 
@@ -64,9 +62,8 @@ export default function RoomPage() {
       }
     } else {
       setIsOpenModalJoinRoom(true);
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, [roomId]);
 
   useEffect(() => {
@@ -101,6 +98,7 @@ export default function RoomPage() {
   useEffect(() => {
     const handleRoomUpdate = (users: User[]) => {
       setUsers(users);
+      setIsLoading(false);
     };
 
     socket.on("roomUpdate", handleRoomUpdate);
@@ -196,6 +194,9 @@ export default function RoomPage() {
     }
   };
 
+  const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
+  const playerUsers = users.filter(user => user.role === 'player');
+
   const changeUsername = () => {
     if (!newUsername || newUsername.trim() === "") return;
     setUsername(newUsername);
@@ -206,6 +207,8 @@ export default function RoomPage() {
 
   const joinRoom = (username: string, role: 'player' | 'spectator') => {
     localStorage.setItem("username", username);
+    localStorage.setItem("room", roomId as string);
+    localStorage.setItem("role", role);
     setUsername(username);
     socket.emit("joinRoom", { roomId: roomId, username, role });
     setIsOpenModalJoinRoom(false);
@@ -222,7 +225,7 @@ export default function RoomPage() {
           </div>
           <div className="flex gap-8 mt-6">
             <div className="flex-col flex gap-8">
-              <UsersOnline title="Players" users={users.filter(user => user.role === 'player')} username={username} />
+              <UsersOnline title="Players" users={users.filter(user => user.role === 'player')} votedUsers={votedUsers} username={username} />
               <UsersOnline title="Spectators" users={users.filter(user => user.role === 'spectator')} username={username} />
             </div>
             
@@ -247,19 +250,17 @@ export default function RoomPage() {
                   <p>Individual Votes</p>
                 </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
-                  {users.map((user, index) => {
+                  {playerUsers.map((user, index) => {
                     const voteValue = revealed ? votes?.[user.username] : undefined;
                     let color: "green" | "yellow" | undefined = undefined;
-
                     if (revealed && voteValue && !isNaN(Number(voteValue))) {
-                      const numericVotes = Object.values(votes || {})
-                        .filter(v => !isNaN(Number(v)))
-                        .map(v => Number(v));
-
+                     const numericVotes = Object.values(votes || {})
+                      .filter((v) => v !== '' && !isNaN(Number(v)))
+                      .map(Number);
+                      
                       const max = Math.max(...numericVotes);
                       const min = Math.min(...numericVotes);
                       const current = Number(voteValue);
-
                       if (current === max) color = "yellow";
                       else if (current === min) color = "green";
                     }
@@ -279,17 +280,22 @@ export default function RoomPage() {
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
                 <div className="flex justify-between items-center mb-4">
                   <p>Voting session</p>
-                  <p><span className="text-green-500">{votedUsers.size} </span>of {users.length} voted</p>
+                  <p><span className="text-green-500">{votedUsers.size} </span>of {playerUsers.length} voted</p>
                 </div>
-                <ProgressBar value={(votedUsers.size / users.length) * 100} color="bg-green-500" />
+                <ProgressBar value={(votedUsers.size / playerUsers.length) * 100} color="bg-green-500" />
               </div>
-              <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
+              <div className={`bg-white w-full rounded-lg shadow-sm p-6 mt-8 ${userIsSpectator ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center gap-2">
                   <p>Select Vote</p>
                 </div>
-                <div className="flex justify-between mt-4">
+                <div className={`flex justify-between mt-4`}>
                   {["1", "2", "3", "5", "8", "13", "21", "?"].map((value) => (
-                    <Card selectedCard={card} value={value} key={value} onClick={() => submitVote(value)} />
+                    <Card
+                      selectedCard={card}
+                      value={value}
+                      key={value}
+                      onClick={() => submitVote(value)}
+                    />
                   ))}
                 </div>
               </div>
@@ -299,7 +305,7 @@ export default function RoomPage() {
                   onClick={revealVotes}
                   iconName="eye"
                   full
-                  disabled={votedUsers.size !== users.length}
+                  disabled={votedUsers.size !== playerUsers.length}
                 />
                 <Button
                   full

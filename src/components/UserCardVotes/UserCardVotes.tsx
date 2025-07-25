@@ -22,7 +22,7 @@ export const UserCardVotes = ({
       <div className="flex w-full justify-between items-center p-4 rounded-lg">
         <div className="flex items-center">
           <Icon name="user" className="mr-4" />
-          <div className="h-8">
+          <div className="">
             <p className="font-bold flex items-center gap-1">{username} {isCurrentUser && <span className="text-xs"> (You)</span>}</p>
             {color === 'yellow' && <p className="text-xs italic">biggest vote</p>}
             {color === 'green' && <p className="text-xs italic">lowest vote</p>}
