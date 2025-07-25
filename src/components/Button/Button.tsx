@@ -9,6 +9,7 @@ interface IButtonProps {
   variant?: "primary" | "secondary";
   textCenter?: boolean;
   outlined?: boolean;
+  disabled?: boolean;
 }
 
 export const Button = ({
@@ -19,9 +20,10 @@ export const Button = ({
   variant = "primary",
   textCenter = false,
   outlined,
+  disabled
 }: IButtonProps) => {
   return (
-    <button className={button({ variant, full, textCenter, outlined })} onClick={onClick}>
+    <button className={button({ variant, full, textCenter, outlined, disabled })} onClick={onClick}>
       {iconName && (
         <Icon
           size={14}

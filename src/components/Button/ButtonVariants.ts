@@ -15,6 +15,9 @@ export const button = tv({
     },
     outlined: {
       true: "border-2 border-blue-500"
+    },
+    disabled: {
+      true: "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300",
     }
   },
   defaultVariants: {

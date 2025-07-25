@@ -35,6 +35,8 @@ export default function RoomPage() {
   const [newUsername, setNewUsername] = useState("");
   const [focusNewUsername, setFocusNewUsername] = useState(false);
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
+  const [averageVotes, setAverageVotes] = useState(0);
+  const [mostVoted, setMostVoted] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -108,9 +110,11 @@ export default function RoomPage() {
   }, []);
 
   useEffect(() => {
-    socket.on("revealVotes", (voteMap: Record<string, string>) => {
+    socket.on("revealVotes", ({ votes: voteMap, average, mostVoted }) => {
       setVotes(voteMap);
       setRevealed(true);
+      setAverageVotes(Number(average));
+      setMostVoted(mostVoted);
     });
 
     socket.on("resetVotes", () => {
@@ -222,30 +226,49 @@ export default function RoomPage() {
             </div>
             
             <div className="flex-col w-full">
+              {revealed && (
+                <div className="bg-white w-full rounded-lg shadow-sm p-6 mb-8">
+                  <div className="flex items-center gap-2">
+                    <Icon name="chartPie" color="#0368DB" size={20} />
+                    <p>Voting Results</p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    <VoteResult vote={mostVoted} color="green" label="Most Voted" />
+                    <VoteResult vote={averageVotes} toFixed={2} color="blue" label="Average" />
+                    <VoteResult vote={Object.entries(votes || {}).length} color="purple" label="Total Votes" />
+                  </div>
+                  
+                </div>
+              )}
               <div className="bg-white w-full rounded-lg shadow-sm p-6">
-                <div className="flex items-center gap-2">
-                  <Icon name="chartPie" color="#0368DB" size={20} />
-                  <p>Voting Results</p>
-                </div>
-                <div className="grid grid-cols-3 gap-4 mt-4">
-                  <VoteResult vote="5" color="green" label="Most Voted" />
-                  <VoteResult vote="5" color="blue" label="Average" />
-                  <VoteResult vote="5" color="purple" label="Total Votes" />
-                </div>
-              </div>
-              <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8">
                 <div className="flex items-center gap-2">
                   <Icon name="groupOfUsers" color="#0368DB" size={20} />
                   <p>Individual Votes</p>
                 </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   {users.map((user, index) => {
+                    const voteValue = revealed ? votes?.[user] : undefined;
+                    let color: "green" | "yellow" | undefined = undefined;
+
+                    if (revealed && voteValue && !isNaN(Number(voteValue))) {
+                      const numericVotes = Object.values(votes || {})
+                        .filter(v => !isNaN(Number(v)))
+                        .map(v => Number(v));
+
+                      const max = Math.max(...numericVotes);
+                      const min = Math.min(...numericVotes);
+                      const current = Number(voteValue);
+
+                      if (current === max) color = "yellow";
+                      else if (current === min) color = "green";
+                    }
                     return (
                       <UserCardVotes
                         key={index}
                         isCurrentUser={user === username}
                         username={user}
                         vote={revealed ? votes?.[user] : undefined}
+                        color={color}
                       />
                     )}
                   )}
@@ -274,11 +297,16 @@ export default function RoomPage() {
                   text="Reveal Votes"
                   onClick={revealVotes}
                   iconName="eye"
+                  full
+                  disabled={votedUsers.size !== users.length}
                 />
                 <Button
+                  full
                   text="Reset Votes"
                   onClick={resetVotes}
                   iconName="refresh"
+                  variant="secondary"
+                  outlined
                 />
               </div>
             </div>
