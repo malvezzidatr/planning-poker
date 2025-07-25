@@ -9,7 +9,7 @@ interface IModalProps {
   headerDescription?: string;
   isOpen: boolean;
   onClose: () => void;
-  handlePress: (username: string) => void;
+  handlePress: (username: string, role: 'player' | 'spectator') => void;
   handleCancel?: () => void;
 }
 
@@ -50,13 +50,13 @@ export const JoinRoomModal = ({
             <p className="text-md text-black">Role *</p>
             <div className="flex gap-4">
               <UserRoleCard onPress={() => handleRoleChange("player")} active={isPlayer} type="Player" description="Vote on estimates" iconName="user" />
-              {/* <UserRoleCard onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" /> */}
+              <UserRoleCard onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
             </div>
           </div>
         </div>
         <div className="flex justify-between mt-6 gap-4">
-          <Button full text="Cancel" onClick={handleCancel ?? onClose} />
-          <Button full text="Join Room" iconName="arrowRight" onClick={() => handlePress(name)} />
+          <Button variant="secondary" full text="Cancel" onClick={handleCancel ?? onClose} />
+          <Button full text="Join Room" iconName="arrowRight" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator')} />
         </div>
       </div>
     </div>

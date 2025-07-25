@@ -16,19 +16,25 @@ import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
 import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
 import Icon from "@/components/Icon/Icon";
 import { VoteResult } from "@/components/VoteResult/VoteResult";
+import { UsersOnline } from "@/components/UsersOnline/UsersOnline";
+
+type User = {
+  username: string;
+  role: 'player' | 'spectator';
+}
 
 export default function RoomPage() {
   const { roomId } = useParams();
 
   const [username, setUsername] = useState("");
   const [joined, setJoined] = useState(false);
-  const [users, setUsers] = useState<string[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [card, setCard] = useState("");
   const [votes, setVotes] = useState<Record<string, string> | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [votedUsers, setVotedUsers] = useState<Set<string>>(new Set());
   const [copySuccess, setCopySuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -42,10 +48,11 @@ export default function RoomPage() {
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const storedCard = localStorage.getItem("card");
+    const role = localStorage.getItem("role");
 
     if (storedUsername) {
       setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername });
+      socket.emit("joinRoom", { roomId, username: storedUsername, role });
 
       if (storedCard) {
         socket.emit("vote", {
@@ -92,8 +99,8 @@ export default function RoomPage() {
   }, [username]);
 
   useEffect(() => {
-    const handleRoomUpdate = (usernames: string[]) => {
-      setUsers(usernames);
+    const handleRoomUpdate = (users: User[]) => {
+      setUsers(users);
     };
 
     socket.on("roomUpdate", handleRoomUpdate);
@@ -197,10 +204,10 @@ export default function RoomPage() {
     setShowUserModal(false);
   }
 
-  const joinRoom = (username: string) => {
+  const joinRoom = (username: string, role: 'player' | 'spectator') => {
     localStorage.setItem("username", username);
     setUsername(username);
-    socket.emit("joinRoom", { roomId: roomId, username });
+    socket.emit("joinRoom", { roomId: roomId, username, role });
     setIsOpenModalJoinRoom(false);
   };
 
@@ -214,15 +221,9 @@ export default function RoomPage() {
             <Button onClick={copyLink} text="Copy room" iconName="copy" />
           </div>
           <div className="flex gap-8 mt-6">
-            <div className="flex-col">
-              <div className="p-6 bg-white rounded-lg shadow-md w-[300px] flex flex-col gap-4">
-                <p className="font-bold">Players ({users.length})</p>
-                {users.map((user, index) => {
-                  return (
-                    <UserCard key={index} username={user} isCurrentUser={user === username} hasVoted={votedUsers.has(user)} />
-                  );
-                })}
-              </div>
+            <div className="flex-col flex gap-8">
+              <UsersOnline title="Players" users={users.filter(user => user.role === 'player')} username={username} />
+              <UsersOnline title="Spectators" users={users.filter(user => user.role === 'spectator')} username={username} />
             </div>
             
             <div className="flex-col w-full">
@@ -247,7 +248,7 @@ export default function RoomPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   {users.map((user, index) => {
-                    const voteValue = revealed ? votes?.[user] : undefined;
+                    const voteValue = revealed ? votes?.[user.username] : undefined;
                     let color: "green" | "yellow" | undefined = undefined;
 
                     if (revealed && voteValue && !isNaN(Number(voteValue))) {
@@ -265,9 +266,9 @@ export default function RoomPage() {
                     return (
                       <UserCardVotes
                         key={index}
-                        isCurrentUser={user === username}
-                        username={user}
-                        vote={revealed ? votes?.[user] : undefined}
+                        isCurrentUser={user.username === username}
+                        username={user.username}
+                        vote={revealed ? votes?.[user.username] : undefined}
                         color={color}
                       />
                     )}

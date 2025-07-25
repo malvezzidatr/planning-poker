@@ -18,10 +18,12 @@ export default function Home() {
   const [isJoinRoomModalOpen, setIsJoinRoomModalOpen] = useState(false);
   const [roomCode, setRoomCode] = useState("");
 
-  const createRoom = (username: string) => {
+  const createRoom = (username: string, role: 'player' | 'spectator') => {
     const newRoomId = uuid().slice(0, 6);
     router.push(`/room/${newRoomId}`);
     localStorage.setItem("username", username);
+    localStorage.setItem("room", newRoomId);
+    localStorage.setItem("role", role);
   };
 
   const joinRoom = (username: string) => {

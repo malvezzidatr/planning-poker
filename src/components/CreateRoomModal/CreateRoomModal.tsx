@@ -10,7 +10,7 @@ interface ICreateRoomModal {
   headerDescription?: string;
   isOpen: boolean;
   onClose: () => void;
-  handlePress: (username: string) => void;
+  handlePress: (username: string, role: 'player' | 'spectator') => void;
 }
 
 export const CreateRoomModal = ({
@@ -56,13 +56,13 @@ export const CreateRoomModal = ({
             <p className="text-md text-black">Your role *</p>
             <div className="flex gap-4">
               <UserRoleCard onPress={() => handleRoleChange("player")} active={isPlayer} type="Player" description="Vote on estimates" iconName="user" />
-              {/* <UserRoleCard onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" /> */}
+              <UserRoleCard onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
             </div>
           </div>
         </div>
         <div className="flex justify-between mt-6 gap-4">
           <Button variant="secondary" textCenter full text="Cancel" onClick={onClose} />
-          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name)} />
+          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator')} />
         </div>
       </div>
     </div>
