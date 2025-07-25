@@ -1,15 +1,8 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
-import socket from "../../../lib/socket";
-import { motion } from "framer-motion";
-import { GoVerified } from "react-icons/go";
-import { RxCross1 } from "react-icons/rx";
 import Header from "@/components/Header/Header";
-import { MdAccountCircle } from "react-icons/md";
 import { Button } from "@/components/Button/Button";
-import { UserCard } from "@/components/UserCard/UserCard";
 import { UserCardVotes } from "@/components/UserCardVotes/UserCardVotes";
 import { Card } from "@/components/Card/Card";
 import { ProgressBar } from "@/components/ProgressBar/ProgressBar";
@@ -17,149 +10,41 @@ import { JoinRoomModal } from "@/components/JoinRoomModal/JoinRoomModal";
 import Icon from "@/components/Icon/Icon";
 import { VoteResult } from "@/components/VoteResult/VoteResult";
 import { UsersOnline } from "@/components/UsersOnline/UsersOnline";
-
-type User = {
-  username: string;
-  role: 'player' | 'spectator';
-}
+import { useRoom } from "./useRoom";
 
 export default function RoomPage() {
   const { roomId } = useParams();
 
-  const [username, setUsername] = useState("");
-  const [joined, setJoined] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [card, setCard] = useState("");
-  const [votes, setVotes] = useState<Record<string, string> | null>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [votedUsers, setVotedUsers] = useState<Set<string>>(new Set());
-  const [copySuccess, setCopySuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showUserModal, setShowUserModal] = useState(false);
-  const [newUsername, setNewUsername] = useState("");
-  const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
-  const [averageVotes, setAverageVotes] = useState(0);
-  const [mostVoted, setMostVoted] = useState(0);
+  const {
+    averageVotes,
+    card,
+    changeUsername,
+    copyLink,
+    isOpenModalJoinRoom,
+    copySuccess,
+    isLoading,
+    joinRoom,
+    joined,
+    mostVoted,
+    newUsername,
+    resetVotes,
+    revealVotes,
+    revealed,
+    setIsOpenModalJoinRoom,
+    setNewUsername,
+    setShowUserModal,
+    setUsername,
+    showUserModal,
+    submitVote,
+    username,
+    users,
+    votedUsers,
+    votes,
+    playerUsers,
+    spectatorUsers,
+    userIsSpectator
+  } = useRoom(roomId);
   const router = useRouter();
-
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const storedCard = localStorage.getItem("card");
-    const role = localStorage.getItem("role");
-    const lastRoom = localStorage.getItem("room");
-
-    if (storedUsername && roomId === lastRoom) {
-      setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername, role });
-
-      if (storedCard) {
-        socket.emit("vote", {
-          roomId,
-          username: storedUsername,
-          card: storedCard
-        });
-        setCard(storedCard);
-      }
-    } else {
-      setIsOpenModalJoinRoom(true);
-      setIsLoading(false);
-    }
-  }, [roomId]);
-
-  useEffect(() => {
-    socket.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }) => {
-      setRevealed(revealedFromServer);
-      setVotes(votesFromServer);
-
-      const voted = Object.entries(votesFromServer).filter(([_, value]) => value !== "");
-      setVotedUsers(new Set(voted.map(([user]) => user)));
-
-      if (votesFromServer[username]) {
-        setCard(votesFromServer[username]);
-        localStorage.setItem("card", votesFromServer[username]);
-      } else {
-        const storedCard = localStorage.getItem("card");
-        if (storedCard) {
-          setCard(storedCard);
-          socket.emit("vote", {
-            roomId,
-            username,
-            card: storedCard,
-          });
-        }
-      }
-    });
-
-    return () => {
-      socket.off("roomState");
-    };
-  }, [username]);
-
-  useEffect(() => {
-    const handleRoomUpdate = (users: User[]) => {
-      setUsers(users);
-      setIsLoading(false);
-    };
-
-    socket.on("roomUpdate", handleRoomUpdate);
-
-    return () => {
-      socket.off("roomUpdate", handleRoomUpdate);
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      socket.emit("leaveRoom");
-    };
-  }, []);
-
-  useEffect(() => {
-    socket.on("revealVotes", ({ votes: voteMap, average, mostVoted }) => {
-      setVotes(voteMap);
-      setRevealed(true);
-      setAverageVotes(Number(average));
-      setMostVoted(mostVoted);
-    });
-
-    socket.on("resetVotes", () => {
-      setVotes(null);
-      setCard("");
-      setRevealed(false);
-      setVotedUsers(new Set());
-      localStorage.removeItem("card");
-    });
-
-    socket.on("userVoted", (user: string) => {
-      setVotedUsers((prev) => new Set(prev).add(user));
-    });
-
-    return () => {
-      socket.off("roomUpdate");
-      socket.off("revealVotes");
-      socket.off("resetVotes");
-      socket.off("userVoted");
-    };
-  }, [roomId]);
-
-  useEffect(() => {
-    const handleVotesUpdate = (votes: Record<string, string>) => {
-      setVotes(votes);
-      const voted = Object.entries(votes).filter(([_, value]) => value !== "");
-      setVotedUsers(new Set(voted.map(([user]) => user)));
-
-      if (votes[username] && votes[username] !== card) {
-        setCard(votes[username]);
-        localStorage.setItem("card", votes[username]);
-      }
-    };
-
-    socket.on('votesUpdate', handleVotesUpdate);
-
-    return () => {
-      socket.off('votesUpdate', handleVotesUpdate);
-    };
-  }, [username, card]);
 
   if (isLoading) {
     return (
@@ -168,51 +53,6 @@ export default function RoomPage() {
       </main>
     )
   }
-
-  const submitVote = (value: string) => {
-    setCard(value);
-    localStorage.setItem("card", value);
-    socket.emit("vote", { roomId, username, card: value });
-  };
-
-  const revealVotes = () => {
-    socket.emit("reveal", roomId);
-  };
-
-  const resetVotes = () => {
-    socket.emit("reset", roomId);
-  };
-
-  const copyLink = async () => {
-    if (!window || !roomId) return;
-    try {
-      await navigator.clipboard.writeText(roomId as string);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch {
-      // falhou em copiar
-    }
-  };
-
-  const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
-  const playerUsers = users.filter(user => user.role === 'player');
-
-  const changeUsername = () => {
-    if (!newUsername || newUsername.trim() === "") return;
-    setUsername(newUsername);
-    localStorage.setItem("username", newUsername);
-    socket.emit("changeUsername", { roomId, oldUsername: username, newUsername });
-    setShowUserModal(false);
-  }
-
-  const joinRoom = (username: string, role: 'player' | 'spectator') => {
-    localStorage.setItem("username", username);
-    localStorage.setItem("room", roomId as string);
-    localStorage.setItem("role", role);
-    setUsername(username);
-    socket.emit("joinRoom", { roomId: roomId, username, role });
-    setIsOpenModalJoinRoom(false);
-  };
 
   return (
     <>
@@ -225,8 +65,8 @@ export default function RoomPage() {
           </div>
           <div className="flex gap-8 mt-6">
             <div className="flex-col flex gap-8">
-              <UsersOnline title="Players" users={users.filter(user => user.role === 'player')} votedUsers={votedUsers} username={username} />
-              <UsersOnline title="Spectators" users={users.filter(user => user.role === 'spectator')} username={username} />
+              <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username} />
+              <UsersOnline title="Spectators" users={spectatorUsers} username={username} />
             </div>
             
             <div className="flex-col w-full">
