@@ -11,6 +11,7 @@ import { CreateRoomModal } from "@/components/CreateRoomModal/CreateRoomModal";
 import socket from "@/lib/socket";
 import { HelpfulCard } from "@/components/HelpfulCard/HelpfulCard";
 import { Footer } from "@/components/Footer/footer";
+import { JoinSessionCard } from "@/components/JoinSessionCard/JoinSessionCard";
 
 export default function Home() {
   const router = useRouter();
@@ -26,16 +27,14 @@ export default function Home() {
     localStorage.setItem("role", role);
   };
 
-  const joinRoom = (username: string) => {
-    localStorage.setItem("username", username);
-    socket.emit("joinRoom", { roomId: roomCode.trim(), username });
+  const joinRoom = () => {
     router.push(`/room/${roomCode.trim()}`);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       if (roomCode.trim()) {
-        setIsJoinRoomModalOpen(true);
+        joinRoom();
       }
     }
   };
@@ -47,9 +46,9 @@ export default function Home() {
         <div className="w-1/2">
           <h1 className="text-[#004593] font-bold text-5xl mb-4">Estimate tasks with your team, simplified</h1>
           <p className="text-[#4B5563] text-xl w-11/12">Planning Poker is a consenseus-based estimation technique for agile teams. Estimate effort or relative size of user stories in a fun, effective way.</p>
-          <div className="mt-8 flex gap-5">
-            <Button full onClick={() => setIsCreateRoomModalOpen(true)} text="Create New Room" iconName="plus" />
-            <Input onClickIcon={() => setIsJoinRoomModalOpen(true)} iconName="arrowRight" onKeyDown={handleKeyDown} value={roomCode} setValue={setRoomCode} placeholder="Enter room code" />
+          <div className="flex flex-row gap-5 mt-5">
+            <JoinSessionCard buttonBackgroundColor="blue" primaryColor="blue" buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
+            <JoinSessionCard buttonBackgroundColor="green" primaryColor="green" buttonIconName="handTogether" onClick={joinRoom} iconName="groupOfUsers" description="Have a room code? Join your team's estimation session." title="Join Existing Room" buttonText="Join Room" input={{ value: roomCode, setValue: setRoomCode }} />
           </div>
         </div>
         <Image width={450} height={450} alt="teste" src={'/Image_home.png'} />
@@ -63,13 +62,6 @@ export default function Home() {
         </div>
       </div>
       <Footer />
-      <JoinRoomModal
-        onClose={() => setIsJoinRoomModalOpen(false)}
-        isOpen={isJoinRoomModalOpen}
-        headerTitle="Join Room"
-        headerDescription="Please provide your details to join the session."
-        handlePress={joinRoom}
-      />
       <CreateRoomModal
         onClose={() => setIsCreateRoomModalOpen(false)}
         isOpen={isCreateRoomModalOpen}

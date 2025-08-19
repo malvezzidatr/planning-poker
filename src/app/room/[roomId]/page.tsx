@@ -132,12 +132,14 @@ export default function RoomPage() {
               </div>
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
                 <Button
+                  backgroundColor="blue"
                   text="Reveal Votes"
                   onClick={revealVotes}
                   iconName="eye"
                   full
-                  disabled={votedUsers.size !== playerUsers.length}
+                  disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
                 />
+                {playerUsers.length}
                 <Button
                   full
                   text="Reset Votes"
