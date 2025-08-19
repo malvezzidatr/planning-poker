@@ -6,9 +6,11 @@ interface IUserTypeCardProps {
   description: string;
   active?: boolean;
   onPress?: () => void;
+  testID?: string;
 }
 
 export const UserRoleCard = ({
+  testID,
   iconName,
   type,
   description,
@@ -16,7 +18,7 @@ export const UserRoleCard = ({
   onPress = () => {},
 }: IUserTypeCardProps) => {
   return (
-    <div className={`transition cursor-pointer w-full h-[140px] border-2 border-[#E4E7EB] rounded-lg bg-[#F9FAFB] flex flex-col items-center justify-center ${active ? "border-blue-500 bg-blue-50" : ""}`} onClick={onPress}>
+    <div data-active={active} data-testid={testID} className={`transition cursor-pointer w-full h-[140px] border-2 border-[#E4E7EB] rounded-lg bg-[#F9FAFB] flex flex-col items-center justify-center ${active ? "border-blue-500 bg-blue-50" : ""}`} onClick={onPress}>
       <Icon color={`${active ? '#3B82F6' : '#6A7280'}`} name={iconName} />
       <p className={`${active ? "text-blue-500" : "text-[#374151]"}  text-lg`}>{type}</p>
       <p className={`${active ? "text-blue-500" : "text-[#6A7280]"} text-sm`}>{description}</p>

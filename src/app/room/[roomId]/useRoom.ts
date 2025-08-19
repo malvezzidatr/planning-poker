@@ -28,22 +28,11 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
-    const storedCard = localStorage.getItem("card");
     const role = localStorage.getItem("role");
     const lastRoom = localStorage.getItem("room");
-
     if (storedUsername && roomId === lastRoom) {
       setUsername(storedUsername);
       socket.emit("joinRoom", { roomId, username: storedUsername, role });
-
-      if (storedCard) {
-        socket.emit("vote", {
-          roomId,
-          username: storedUsername,
-          card: storedCard,
-        });
-        setCard(storedCard);
-      }
     } else {
       setIsOpenModalJoinRoom(true);
       setIsLoading(false);
@@ -61,16 +50,6 @@ export function useRoom(roomId: string | string[] | undefined) {
       if (votesFromServer[username]) {
         setCard(votesFromServer[username]);
         localStorage.setItem("card", votesFromServer[username]);
-      } else {
-        const storedCard = localStorage.getItem("card");
-        if (storedCard) {
-          setCard(storedCard);
-          socket.emit("vote", {
-            roomId,
-            username,
-            card: storedCard,
-          });
-        }
       }
     });
 
@@ -81,6 +60,7 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   useEffect(() => {
     const handleRoomUpdate = (users: User[]) => {
+      console.log(users)
       setUsers(users);
       setIsLoading(false);
     };

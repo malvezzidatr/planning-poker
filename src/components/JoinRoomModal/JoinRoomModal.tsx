@@ -23,15 +23,16 @@ export const JoinRoomModal = ({
 }: IModalProps) => {
   const [name, setName] = useState("");
   const [isPlayer, setIsPlayer] = useState(true);
-  
 
   const handleRoleChange = (role: "player" | "spectator") => {
     setIsPlayer(role === "player");
   };
 
+  if (!isOpen) return null;
+
   return (
     <div
-      style={{backgroundColor: "rgba(0, 0, 0, 0.5)", display: isOpen ? "flex" : "none"}}
+      style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
       className="fixed inset-0 flex flex-col justify-center items-center z-50"
     >
       <div className="bg-white text-black p-6 rounded-lg shadow-lg w-[500px]">

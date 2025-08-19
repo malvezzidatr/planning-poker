@@ -152,7 +152,7 @@ export default function RoomPage() {
         </div>
       </div>
       <JoinRoomModal
-        onClose={() => setIsOpenModalJoinRoom(false)}
+        onClose={() => router.push('/')}
         isOpen={isOpenModalJoinRoom}
         headerTitle="Join Room"
         headerDescription="Please provide your details to join the session."

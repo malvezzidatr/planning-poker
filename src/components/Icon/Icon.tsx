@@ -35,9 +35,10 @@ interface IconProps {
   size?: number;
   color?: string;
   className?: string;
+  testID?: string;
 }
 
-export default function Icon({ name, size = 24, color, className }: IconProps) {
+export default function Icon({ name, size = 24, color, className, testID }: IconProps) {
   const IconComponent = icons[name];
-  return <IconComponent size={size} color={color} className={className} />;
+  return <IconComponent data-testid={testID} size={size} color={color} className={className} />;
 }

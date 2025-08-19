@@ -1,12 +1,8 @@
-/** @type {import('jest').Config} */
 module.exports = {
-  testEnvironment: 'jsdom',
-  moduleNameMapper: {
-    '\\.(css|scss|sass)$': 'identity-obj-proxy',
-  },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  preset: "ts-jest",
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+    "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { configFile: "./babel.config.jest.js" }],
   },
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
+  testEnvironment: "jsdom",
 };

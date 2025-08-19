@@ -28,17 +28,19 @@ export const CreateRoomModal = ({
     setIsPlayer(role === "player");
   };
 
+  if (!isOpen) return null;
+
   return (
     <div
-      style={{backgroundColor: "rgba(0, 0, 0, 0.5)", display: isOpen ? "flex" : "none"}}
-      className="fixed inset-0 flex flex-col justify-center items-center z-50"
+      style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
+      className="fixed inset-0 flex-col justify-center items-center z-50 flex"
     >
       <div className="bg-white text-black p-6 rounded-lg shadow-lg w-[700px]">
         <div className="mb-10">
           <div className="flex items-center justify-between">
             <p className="text-2xl font-bold">{headerTitle}</p>
             <div onClick={onClose}>
-              <Icon className="cursor-pointer hover:opacity-60 transition" name="close" color="#000" />
+              <Icon testID="icon-close" className="cursor-pointer hover:opacity-60 transition" name="close" color="#000" />
             </div>
           </div>
           <p>{headerDescription}</p>
@@ -50,13 +52,13 @@ export const CreateRoomModal = ({
           </div>
           <div className="mt-6 flex flex-col gap-4">
             <p className="text-md text-black">Voting Cards Type *</p>
-            <VotingCardType type="Fibonacci" description="Classic agile estimation" />
+            <VotingCardType testID={"voting-card-type"} type="Fibonacci" description="Classic agile estimation" />
           </div>
           <div className="mt-6 flex flex-col gap-4">
             <p className="text-md text-black">Your role *</p>
             <div className="flex gap-4">
-              <UserRoleCard onPress={() => handleRoleChange("player")} active={isPlayer} type="Player" description="Vote on estimates" iconName="user" />
-              <UserRoleCard onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
+              <UserRoleCard testID="role-card-player" onPress={() => handleRoleChange("player")} active={isPlayer} type="Player" description="Vote on estimates" iconName="user" />
+              <UserRoleCard testID="role-card-spectator" onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
             </div>
           </div>
         </div>
