@@ -23,7 +23,7 @@ export const Button = ({
   disabled
 }: IButtonProps) => {
   return (
-    <button className={button({ variant, full, textCenter, outlined, disabled })} onClick={onClick}>
+    <button className={button({ variant, full, textCenter, outlined, disabled })} disabled={disabled} onClick={onClick}>
       {iconName && (
         <Icon
           size={14}
