@@ -139,7 +139,6 @@ export default function RoomPage() {
                   full
                   disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
                 />
-                {playerUsers.length}
                 <Button
                   full
                   text="Reset Votes"
