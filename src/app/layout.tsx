@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Planning Poker",
-  description: "A collaborative tool for agile estimation",
+  title: "Planning Poker Online - Agile Estimation Tool for Scrum Teams",
+  description: "Free Planning Poker online tool for Scrum and Agile teams. Estimate tasks collaboratively with real-time voting and team engagement.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -33,7 +33,32 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
-
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Planning Poker" />
+        <meta property="og:description" content="Collaborative agile estimation tool" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:url" content="https://planningpokerapp.com.br/" />
+        <meta name="keywords" content="Planning Poker, Agile estimation, Scrum, online planning poker, agile tools" />
+        <meta name="author" content="Planning Poker App" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Planning Poker - Agile Estimation Tool" />
+        <meta name="twitter:description" content="Estimate tasks collaboratively with your Agile team using Planning Poker online." />
+        <meta name="twitter:image" content="https://planningpokerapp.com.br/og-image.png" />
+        <link rel="canonical" href="https://planningpokerapp.com.br/" />
+        <Script id="ld-json" type="application/ld+json" strategy="afterInteractive">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Planning Poker",
+              "url": "https://planningpokerapp.com.br/",
+              "description": "Free agile estimation tool for Scrum teams to estimate tasks collaboratively.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "All"
+            }
+          `}
+        </Script>
         {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
