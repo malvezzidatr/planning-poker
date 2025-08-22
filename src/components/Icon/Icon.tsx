@@ -13,11 +13,13 @@ import {
   FaLinkedin,
   FaChevronDown,
   FaChevronUp,
+  FaArrowLeft,
 } from "react-icons/fa";
 
 const icons = {
   plus: FaPlus,
   arrowRight: FaArrowRight,
+  arrowLeft: FaArrowLeft,
   close: FaTimes,
   user: FaUserAlt,
   eye: FaEye,

@@ -8,7 +8,6 @@ import { Accordion } from "@/components/Accordion/Accordion";
 import { faq } from "@/texts/faq";
 
 export default function Home() {
-
   return (
     <>
       <Head>
