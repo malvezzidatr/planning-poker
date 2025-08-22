@@ -11,6 +11,8 @@ import {
   FaChartPie,
   FaGithub,
   FaLinkedin,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 
 const icons = {
@@ -26,6 +28,8 @@ const icons = {
   chartPie: FaChartPie,
   github: FaGithub,
   linkedin: FaLinkedin,
+  chevronDown: FaChevronDown,
+  chevronUp: FaChevronUp,
 } as const;
 
 export type IconName = keyof typeof icons;

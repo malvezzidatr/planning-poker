@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { faq } from "@/texts/faq";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +76,22 @@ export default function RootLayout({
             gtag('config', 'G-3YJ3ED0TQQ');
           `}
         </Script>
+        <Script
+          id="faq-json"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faq.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: { "@type": "Answer", text: item.answer }
+              }))
+            })
+          }}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}

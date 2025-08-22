@@ -4,8 +4,11 @@ import { HelpfulCard } from "@/components/HelpfulCard/HelpfulCard";
 import { Footer } from "@/components/Footer/footer";
 import Head from "next/head";
 import { JoinSessionCardGroup } from "@/components/JoinSessionCardGroup/JoinSessionCardGroup";
+import { Accordion } from "@/components/Accordion/Accordion";
+import { faq } from "@/texts/faq";
 
 export default function Home() {
+
   return (
     <>
       <Head>
@@ -31,14 +34,17 @@ export default function Home() {
             <HelpfulCard iconName="chartPie" title="Reach Consensus" description="Discuss differences in estimates and revote until the teams reaches a consensus." />
           </div>
         </div>
+        <div className="flex flex-col items-center mb-10">
+          <h2 className="text-black text-3xl font-bold mb-10">Frequently Asked Questions</h2>
+          <div className="w-2/3 flex flex-col gap-4">
+            {
+              faq.map((item) => (
+                <Accordion key={item.question} question={item.question} answer={item.answer} />
+              ))
+            }
+          </div>
+        </div>
         <Footer />
-        {/* <CreateRoomModal
-          onClose={() => setIsCreateRoomModalOpen(false)}
-          isOpen={isCreateRoomModalOpen}
-          headerTitle="Create Room"
-          headerDescription="Set up your planning session and invite your team"
-          handlePress={createRoom}
-        /> */}
       </div>
     </>
 
