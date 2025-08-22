@@ -44,5 +44,9 @@ interface IconProps {
 
 export default function Icon({ name, size = 24, color, className, testID }: IconProps) {
   const IconComponent = icons[name];
-  return <IconComponent data-testid={testID} size={size} color={color} className={className} />;
+  return (
+    <span data-testid={testID}>
+      <IconComponent size={size} color={color} className={className} />
+    </span>
+  );
 }

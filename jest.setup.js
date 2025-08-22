@@ -5,3 +5,5 @@ console.warn = (msg, ...args) => {
   if (typeof msg === 'string' && msg.includes('JSX transform')) return;
   originalWarn(msg, ...args);
 };
+
+window.scrollTo = jest.fn();
