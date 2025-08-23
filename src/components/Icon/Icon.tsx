@@ -15,6 +15,7 @@ import {
   FaChevronUp,
   FaArrowLeft,
 } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 const icons = {
   plus: FaPlus,
@@ -32,6 +33,7 @@ const icons = {
   linkedin: FaLinkedin,
   chevronDown: FaChevronDown,
   chevronUp: FaChevronUp,
+  email: MdEmail,
 } as const;
 
 export type IconName = keyof typeof icons;
