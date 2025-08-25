@@ -14,6 +14,9 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaArrowLeft,
+  FaExchangeAlt,
+  FaTimesCircle,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
@@ -22,6 +25,8 @@ const icons = {
   arrowRight: FaArrowRight,
   arrowLeft: FaArrowLeft,
   close: FaTimes,
+  closeCircle: FaTimesCircle,
+  attention: FaExclamationTriangle,
   user: FaUserAlt,
   eye: FaEye,
   copy: FaCopy,
@@ -34,6 +39,7 @@ const icons = {
   chevronDown: FaChevronDown,
   chevronUp: FaChevronUp,
   email: MdEmail,
+  change: FaExchangeAlt,
 } as const;
 
 export type IconName = keyof typeof icons;

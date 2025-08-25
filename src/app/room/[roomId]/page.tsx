@@ -26,14 +26,14 @@ export default function RoomPage() {
     resetVotes,
     revealVotes,
     revealed,
-    setIsOpenModalJoinRoom,
     submitVote,
     username,
     votedUsers,
     votes,
     playerUsers,
     spectatorUsers,
-    userIsSpectator
+    userIsSpectator,
+    handleChangeRole,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -56,8 +56,22 @@ export default function RoomPage() {
           </div>
           <div className="flex gap-8 mt-6">
             <div className="flex-col flex gap-8">
-              <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username} />
-              <UsersOnline title="Spectators" users={spectatorUsers} username={username} />
+              <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username}>
+                {userIsSpectator && (
+                  <button onClick={handleChangeRole} className="flex gap-3 w-full items-center cursor-pointer transition justify-center text-center text-blue-500 hover:text-blue-700">
+                    <Icon name="change" />
+                    <p>Entrar como jogador</p>
+                  </button>
+                )}
+              </UsersOnline>
+              <UsersOnline title="Spectators" users={spectatorUsers} username={username}>
+                {!userIsSpectator && (
+                  <button onClick={handleChangeRole} className="flex gap-3 w-full items-center cursor-pointer transition justify-center text-center text-blue-500 hover:text-blue-700">
+                    <Icon name="change" />
+                    <p>Entrar como espectador</p>
+                  </button>
+                )}
+              </UsersOnline>
             </div>
             
             <div className="flex-col w-full">
@@ -113,7 +127,7 @@ export default function RoomPage() {
                   <p>Voting session</p>
                   <p><span className="text-green-500">{votedUsers.size} </span>of {playerUsers.length} voted</p>
                 </div>
-                <ProgressBar value={(votedUsers.size / playerUsers.length) * 100} color="bg-green-500" />
+                <ProgressBar value={((votedUsers.size / playerUsers.length) * 100) || 0} color="bg-green-500" />
               </div>
               <div className={`bg-white w-full rounded-lg shadow-sm p-6 mt-8 ${userIsSpectator ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center gap-2">

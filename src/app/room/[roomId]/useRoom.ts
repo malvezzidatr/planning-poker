@@ -139,6 +139,22 @@ export function useRoom(roomId: string | string[] | undefined) {
     socket.emit("reset", roomId);
   };
 
+  const handleChangeRole = () => {
+    socket.emit("changeUserRole", { roomId, username })
+    setVotes((prev) => {
+      if (!prev) return prev;
+      const newVotes = { ...prev, [username]: "" };
+      return newVotes;
+    });
+
+    if (username) setCard("");
+    setVotedUsers((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(username);
+      return newSet;
+    });
+  }
+
   const copyLink = async () => {
     if (!window || !roomId) return;
     try {
@@ -199,5 +215,6 @@ export function useRoom(roomId: string | string[] | undefined) {
     playerUsers,
     spectatorUsers,
     userIsSpectator,
+    handleChangeRole,
   };
 }
