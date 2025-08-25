@@ -15,17 +15,14 @@ interface ISummaryProps {
 */
 
 export const Summary = ({ title, content, fixed, useContext }: ISummaryProps) => {
-  const { openIndex } = useContext ? useAccordion() : { openIndex: undefined };
+  const accordion = useAccordion();
 
   return (
     <nav className={`${summary({ fixed })}`}>
       <h3 className="text-lg text-black font-bold mb-4">{title}</h3>
       <ul className="text-black">
         {content.map((item, index) => {
-          let isActive = false;
-          if (useContext) {
-            isActive = openIndex === index;
-          }
+          const isActive = useContext ? accordion.openIndex === index : false;
 
           return (
             <li key={item} className="mb-3">
