@@ -41,7 +41,9 @@ export const UsersOnline = ({ users, votedUsers, username, title, children }: IU
           />
         );
       })}
-      {children}
+      <div className="mt-3">
+        {children}
+      </div>
     </div>
   );
 };

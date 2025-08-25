@@ -59,16 +59,16 @@ export default function RoomPage() {
               <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username}>
                 {userIsSpectator && (
                   <button onClick={handleChangeRole} className="flex gap-3 w-full items-center cursor-pointer transition justify-center text-center text-blue-500 hover:text-blue-700">
-                    <Icon name="change" />
-                    <p>Entrar como jogador</p>
+                    <Icon name="change" size={16} />
+                    <p className="text-sm">Join as Player</p>
                   </button>
                 )}
               </UsersOnline>
               <UsersOnline title="Spectators" users={spectatorUsers} username={username}>
                 {!userIsSpectator && (
                   <button onClick={handleChangeRole} className="flex gap-3 w-full items-center cursor-pointer transition justify-center text-center text-blue-500 hover:text-blue-700">
-                    <Icon name="change" />
-                    <p>Entrar como espectador</p>
+                    <Icon name="change" size={16} />
+                    <p className="text-sm">Join as Spectator</p>
                   </button>
                 )}
               </UsersOnline>
