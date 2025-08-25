@@ -33,7 +33,7 @@ export const Button = ({
           color={variant === "primary" ? "#FFF" : "#374151"}
         />
       )}
-      <p className="ml-2">{text}</p>
+      <p className="ml-2 text-sm">{text}</p>
     </button>
   );
 };

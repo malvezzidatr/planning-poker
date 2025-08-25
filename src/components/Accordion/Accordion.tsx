@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon, { IconName } from "../Icon/Icon";
-import { accordion, accordionQuestionSize } from "./AccordionVariants";
+import { accordion, accordionQuestionSize, anwserQuestionSize } from "./AccordionVariants";
 
 interface AccordionProps {
   question: string;
@@ -33,7 +33,7 @@ export const Accordion = ({
     if (onToggle) onToggle();
     else setInternalOpen((v) => !v);
   };
-
+  
   return (
     <div className={accordion({ noBackground })}>
       <button
@@ -57,7 +57,7 @@ export const Accordion = ({
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="px-4"
           >
-            <p className="text-black pt-2 pb-4 whitespace-pre-line">{answer}</p>
+            <p className={anwserQuestionSize({ size: questionSize })}>{answer}</p>
             {visualContent && (
               <div className="w-full flex bg-blue-100 rounded-md text-black p-4 items-center gap-2">
                 {visualIcon && <Icon name={visualIcon} color="#3B82F6" size={20} />}

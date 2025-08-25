@@ -6,11 +6,6 @@ export const accordion = tv({
     noBackground: {
       true: "bg-transparent",
     },
-    questionSize: {
-      SM: "text-sm",
-      MD: "text-md",
-      LG: "text-xl"
-    }
   }
 })
 
@@ -19,8 +14,19 @@ export const accordionQuestionSize = tv({
   variants: {
     size: {
       SM: "text-sm",
-      MD: "text-md",
-      LG: "text-xl"
+      MD: "md:text-lg text-sm",
+      LG: "md:text-xl text-lg"
     }
   }
 })
+
+export const anwserQuestionSize = tv({
+  base: "text-black pt-2 pb-4 whitespace-pre-line",
+  variants: {
+    size: {
+      SM: "text-sm",
+      MD: "md:text-lg text-sm",
+      LG: "md:text-xl text-lg"
+    }
+  }
+});

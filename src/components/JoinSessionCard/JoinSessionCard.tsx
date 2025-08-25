@@ -30,12 +30,12 @@ export const JoinSessionCard = ({
   buttonBackgroundColor = 'none',
 }: JoinSessionCardProps) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center w-[280px] h-[270px]">
+    <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center lg:w-[280px]">
       <div className="flex items-center gap-2 w-full">
         <div className={`p-3 rounded-lg ${primaryColor === 'blue' ? 'bg-blue-200' : 'bg-green-200'}`}>
           <Icon size={16} name={iconName} color={primaryColor === 'blue' ? "#3B82F6" : "#10B981"} />
         </div>
-        <h2 className="text-black font-bold text-lg">{title}</h2>
+        <h2 className="text-black font-bold lg:text-lg text-sm">{title}</h2>
       </div>
       <p className="text-black text-sm my-4">{description}</p>
       {input && (
