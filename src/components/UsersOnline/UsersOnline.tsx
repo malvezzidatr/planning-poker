@@ -2,7 +2,7 @@ import { UserCard } from "../UserCard/UserCard";
 import { ReactNode } from "react";
 
 interface IUsersOnline {
-  users: { username: string; role: "player" | "spectator" }[];
+  users: { username: string; role: "player" | "spectator", admin: boolean }[];
   username: string;
   votedUsers?: Set<string>;
   title: string;
@@ -11,7 +11,7 @@ interface IUsersOnline {
 
 export const UsersOnline = ({ users, votedUsers, username, title, children }: IUsersOnline) => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md w-[300px] flex flex-col gap-4">
+    <div className="p-6 bg-white rounded-lg shadow-md w-[380px] flex flex-col gap-4">
       <div className="flex items-center gap-2 justify-between">
         <p className="font-bold">
           {title} ({users.length})
@@ -30,14 +30,16 @@ export const UsersOnline = ({ users, votedUsers, username, title, children }: IU
           )
         )}
       </div>
-      {users?.map((u, i) => {
-        const isCurrentUser = u.username === username;
+      {users?.map((user) => {
+        const isCurrentUser = user.username === username;
+        
         return (
           <UserCard
-            key={i}
-            username={u.username}
+            key={user.username}
+            username={user.username}
             isCurrentUser={isCurrentUser}
-            hasVoted={votedUsers?.has(u.username)}
+            hasVoted={votedUsers?.has(user.username)}
+            admin={user.admin}
           />
         );
       })}

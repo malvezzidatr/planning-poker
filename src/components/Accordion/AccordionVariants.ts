@@ -25,8 +25,8 @@ export const anwserQuestionSize = tv({
   variants: {
     size: {
       SM: "text-sm",
-      MD: "md:text-lg text-sm",
-      LG: "md:text-xl text-lg"
+      MD: "md:text-md text-sm",
+      LG: "md:text-lg text-md"
     }
   }
 });

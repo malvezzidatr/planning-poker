@@ -33,7 +33,6 @@ export const JoinSessionCardGroup = () => {
     return new Promise((resolve) => {
       socket.emit("checkIfRoomExists", { roomId });
       socket.once("checkIfRoomExistsResponse", ({ exists }) => {
-        console.log(exists)
         resolve(exists);
       });
     });

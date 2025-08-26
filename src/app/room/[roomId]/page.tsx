@@ -11,6 +11,7 @@ import Icon from "@/components/Icon/Icon";
 import { VoteResult } from "@/components/VoteResult/VoteResult";
 import { UsersOnline } from "@/components/UsersOnline/UsersOnline";
 import { useRoom } from "./useRoom";
+import { Footer } from "@/components/Footer/footer";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -34,6 +35,7 @@ export default function RoomPage() {
     spectatorUsers,
     userIsSpectator,
     handleChangeRole,
+    currentUser,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -48,8 +50,8 @@ export default function RoomPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-[#F9FAFB] px-24 flex">
-        <div className="w-full mx-auto mt-28 text-black rounded-lg shadow-xs">
+      <div className="min-h-screen bg-[#F9FAFB] px-24 pb-8 flex">
+        <div className="w-full mx-auto mt-28 text-black rounded-lg">
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
             <p className="font-bold text-2xl">Room: <span className="text-blue-500 font-bold">{roomId}</span></p> 
             <Button onClick={copyLink} text="Copy room" iconName="copy" />
@@ -129,7 +131,7 @@ export default function RoomPage() {
                 </div>
                 <ProgressBar value={((votedUsers.size / playerUsers.length) * 100) || 0} color="bg-green-500" />
               </div>
-              <div className={`bg-white w-full rounded-lg shadow-sm p-6 mt-8 ${userIsSpectator ? "opacity-50 pointer-events-none" : ""}`}>
+              <div className={`bg-white w-full rounded-lg shadow-sm p-6 mt-8 ${userIsSpectator || revealed ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center gap-2">
                   <p>Select Vote</p>
                 </div>
@@ -144,28 +146,34 @@ export default function RoomPage() {
                   ))}
                 </div>
               </div>
-              <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
-                <Button
-                  backgroundColor="blue"
-                  text="Reveal Votes"
-                  onClick={revealVotes}
-                  iconName="eye"
-                  full
-                  disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
-                />
-                <Button
-                  full
-                  text="Reset Votes"
-                  onClick={resetVotes}
-                  iconName="refresh"
-                  variant="secondary"
-                  outlined
-                />
-              </div>
+              {
+                currentUser?.admin && (
+                  <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
+                    <Button
+                      backgroundColor="blue"
+                      text="Reveal Votes"
+                      onClick={revealVotes}
+                      iconName="eye"
+                      full
+                      disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
+                    />
+                    <Button
+                      full
+                      text="Reset Votes"
+                      onClick={resetVotes}
+                      iconName="refresh"
+                      variant="secondary"
+                      outlined={revealed}
+                      disabled={!revealed}
+                    />
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
       </div>
+      <Footer />
       <JoinRoomModal
         onClose={() => router.push('/')}
         isOpen={isOpenModalJoinRoom}

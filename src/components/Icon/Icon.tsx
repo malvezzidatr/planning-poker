@@ -17,6 +17,7 @@ import {
   FaExchangeAlt,
   FaTimesCircle,
   FaExclamationTriangle,
+  FaCrown,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
@@ -40,6 +41,7 @@ const icons = {
   chevronUp: FaChevronUp,
   email: MdEmail,
   change: FaExchangeAlt,
+  crown: FaCrown,
 } as const;
 
 export type IconName = keyof typeof icons;

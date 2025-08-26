@@ -1,18 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import socket from "@/lib/socket";
 
 type User = {
   username: string;
   role: "player" | "spectator";
+  admin: boolean;
 };
 
 export function useRoom(roomId: string | string[] | undefined) {
-  const router = useRouter();
   const [username, setUsername] = useState("");
-  const [joined, setJoined] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [card, setCard] = useState("");
   const [votes, setVotes] = useState<Record<string, string> | null>(null);
@@ -32,7 +30,7 @@ export function useRoom(roomId: string | string[] | undefined) {
     const lastRoom = localStorage.getItem("room");
     if (storedUsername && roomId === lastRoom) {
       setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername, role });
+      socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: true });
     } else {
       setIsOpenModalJoinRoom(true);
       setIsLoading(false);
@@ -186,11 +184,11 @@ export function useRoom(roomId: string | string[] | undefined) {
   const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
   const playerUsers = users.filter(user => user.role === 'player');
   const spectatorUsers = users.filter(user => user.role === 'spectator');
+  const currentUser = users.find(user => user.username === username);
 
   return {
     username,
     setUsername,
-    joined,
     users,
     card,
     votes,
@@ -216,5 +214,6 @@ export function useRoom(roomId: string | string[] | undefined) {
     spectatorUsers,
     userIsSpectator,
     handleChangeRole,
+    currentUser,
   };
 }
