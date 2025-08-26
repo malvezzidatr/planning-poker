@@ -9,7 +9,7 @@ export const Card = ({ onClick, value, selectedCard }: ICardProps) => {
     <div
       onClick={onClick}
       className={`
-        group cursor-pointer transition w-24 h-32 rounded-lg shadow-md 
+        group cursor-pointer transition w-20 h-28 rounded-lg shadow-md 
         flex items-center justify-center border-2 
         ${selectedCard === value 
           ? "bg-blue-50 border-blue-500" 

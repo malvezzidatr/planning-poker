@@ -11,7 +11,7 @@ interface IUsersOnline {
 
 export const UsersOnline = ({ users, votedUsers, username, title, children }: IUsersOnline) => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md w-[380px] flex flex-col gap-4">
+    <div className="p-6 bg-white rounded-lg shadow-md lg:w-[380px] w-full flex flex-col gap-4">
       <div className="flex items-center gap-2 justify-between">
         <p className="font-bold">
           {title} ({users.length})

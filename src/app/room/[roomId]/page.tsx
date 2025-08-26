@@ -50,13 +50,13 @@ export default function RoomPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-[#F9FAFB] px-24 pb-8 flex">
-        <div className="w-full mx-auto mt-28 text-black rounded-lg">
+      <div className="min-h-screen bg-[#F9FAFB] px-4 sm:px-18 pb-8 flex">
+        <div className="w-full mx-auto mt-10 md:mt-28 text-black rounded-lg">
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
             <p className="font-bold text-2xl">Room: <span className="text-blue-500 font-bold">{roomId}</span></p> 
             <Button onClick={copyLink} text="Copy room" iconName="copy" />
           </div>
-          <div className="flex gap-8 mt-6">
+          <div className="flex flex-col lg:flex-row gap-8 mt-6">
             <div className="flex-col flex gap-8">
               <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username}>
                 {userIsSpectator && (
@@ -96,7 +96,7 @@ export default function RoomPage() {
                   <Icon name="groupOfUsers" color="#0368DB" size={20} />
                   <p>Individual Votes</p>
                 </div>
-                <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-4 mt-4">
                   {playerUsers.map((user, index) => {
                     const voteValue = revealed ? votes?.[user.username] : undefined;
                     let color: "green" | "yellow" | undefined = undefined;
@@ -135,7 +135,7 @@ export default function RoomPage() {
                 <div className="flex items-center gap-2">
                   <p>Select Vote</p>
                 </div>
-                <div className={`flex justify-between mt-4`}>
+                <div className={`grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] justify-items-center gap-2 mt-4`}>
                   {["1", "2", "3", "5", "8", "13", "21", "?"].map((value) => (
                     <Card
                       selectedCard={card}
