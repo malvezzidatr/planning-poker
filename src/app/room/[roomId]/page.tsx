@@ -51,7 +51,7 @@ export default function RoomPage() {
     <>
       <Header />
       <div className="min-h-screen bg-[#F9FAFB] px-4 sm:px-18 pb-8 flex">
-        <div className="w-full mx-auto mt-10 md:mt-28 text-black rounded-lg">
+        <div className="w-full mx-auto mt-10 md:mt-20 text-black rounded-lg">
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
             <p className="font-bold text-2xl">Room: <span className="text-blue-500 font-bold">{roomId}</span></p> 
             <Button onClick={copyLink} text="Copy room" iconName="copy" />
@@ -136,7 +136,7 @@ export default function RoomPage() {
                   <p>Select Vote</p>
                 </div>
                 <div className={`grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] justify-items-center gap-2 mt-4`}>
-                  {["1", "2", "3", "5", "8", "13", "21", "?"].map((value) => (
+                  {["1", "2", "3", "5", "8", "13", "21", "☕️"].map((value) => (
                     <Card
                       selectedCard={card}
                       value={value}
