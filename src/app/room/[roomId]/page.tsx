@@ -97,29 +97,63 @@ export default function RoomPage() {
                   <p>Individual Votes</p>
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-4 mt-4">
-                  {playerUsers.map((user, index) => {
-                    const voteValue = revealed ? votes?.[user.username] : undefined;
-                    let color: "green" | "yellow" | undefined = undefined;
-                    if (revealed && voteValue && !isNaN(Number(voteValue))) {
-                     const numericVotes = Object.values(votes || {})
-                      .filter((v) => v !== '' && !isNaN(Number(v)))
-                      .map(Number);
-                      
-                      const max = Math.max(...numericVotes);
-                      const min = Math.min(...numericVotes);
-                      const current = Number(voteValue);
-                      if (current === max) color = "yellow";
-                      else if (current === min) color = "green";
-                    }
-                    return (
-                      <UserCardVotes
-                        key={index}
-                        isCurrentUser={user.username === username}
-                        username={user.username}
-                        vote={revealed ? votes?.[user.username] : undefined}
-                        color={color}
-                      />
-                    )}
+                  {playerUsers.length === 0 ? (
+                    <div className="w-full flex items-center flex-col">
+                      <Icon name="groupOfUsers" color="#D1D5DB" size={65} />
+                      <h3 className="text-black text-2xl font-bold mt-2">Ready to Start Voting?</h3>
+                      <p className="w-[45%] text-center mt-2">We need at least one player to begin the estimation process. Spectators can observe, but players cast the votes!</p>
+                      <div className="w-full mt-4 rounded-lg bg-yellow-100 p-5 flex flex-col items-center justify-center">
+                        <h3 className="font-bold text-yellow-700">How Planning Poker Works</h3>
+                        <div className="flex items-center justify-between w-full mt-4">
+                          <div className="flex flex-col items-center justify-center">
+                            <div className="p-3 w-[260px] flex mb-2 items-center justify-center bg-white rounded-lg">
+                              <Icon name="arrowLeft" />
+                            </div>
+                            <p className="font-bold">Vote</p>
+                            <p>Select story points</p>
+                          </div>
+                          <div className="flex items-center flex-col justify-center">
+                            <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
+                              <Icon name="eye" />
+                            </div>
+                            <p className="font-bold">Reveal</p>
+                            <p>See all estimates</p>
+                          </div>
+                          <div className="items-center flex-col flex justify-center">
+                            <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
+                              <Icon name="arrowLeft" />
+                            </div>
+                            <p className="font-bold">Discuss</p>
+                            <p>Reach consensus</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    playerUsers.map((user, index) => {
+                      const voteValue = revealed ? votes?.[user.username] : undefined;
+                      let color: "green" | "yellow" | undefined = undefined;
+                      if (revealed && voteValue && !isNaN(Number(voteValue))) {
+                      const numericVotes = Object.values(votes || {})
+                        .filter((v) => v !== '' && !isNaN(Number(v)))
+                        .map(Number);
+                        
+                        const max = Math.max(...numericVotes);
+                        const min = Math.min(...numericVotes);
+                        const current = Number(voteValue);
+                        if (current === max) color = "yellow";
+                        else if (current === min) color = "green";
+                      }
+                      return (
+                        <UserCardVotes
+                          key={index}
+                          isCurrentUser={user.username === username}
+                          username={user.username}
+                          vote={revealed ? votes?.[user.username] : undefined}
+                          color={color}
+                        />
+                      )}
+                    )
                   )}
                 </div>
               </div>
@@ -151,19 +185,19 @@ export default function RoomPage() {
                   <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
                     <Button
                       backgroundColor="blue"
-                      text="Reveal Votes"
-                      onClick={revealVotes}
-                      iconName="eye"
+                      text={revealed ? "Revote" : "Reveal Votes"}
+                      onClick={revealed ? resetVotes : revealVotes}
+                      iconName={revealed ? "refresh" : "eye"}
                       full
                       disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
                     />
                     <Button
                       full
-                      text="Reset Votes"
+                      text="Next Story"
                       onClick={resetVotes}
-                      iconName="refresh"
+                      iconName="doubleArrowRight"
                       variant="secondary"
-                      outlined={revealed}
+                      backgroundColor="green"
                       disabled={!revealed}
                     />
                   </div>

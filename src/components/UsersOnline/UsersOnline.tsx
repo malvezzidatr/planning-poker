@@ -1,17 +1,26 @@
+"use client";
+
 import { UserCard } from "../UserCard/UserCard";
 import { ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface IUsersOnline {
-  users: { username: string; role: "player" | "spectator", admin: boolean }[];
+  users: { username: string; role: "player" | "spectator"; admin: boolean }[];
   username: string;
   votedUsers?: Set<string>;
   title: string;
   children?: ReactNode;
 }
 
-export const UsersOnline = ({ users, votedUsers, username, title, children }: IUsersOnline) => {
+export const UsersOnline = ({
+  users,
+  votedUsers,
+  username,
+  title,
+  children,
+}: IUsersOnline) => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md lg:w-[380px] w-full flex flex-col gap-4">
+    <div className="p-6 pb-10 bg-white rounded-lg shadow-md lg:w-[380px] w-full flex flex-col gap-4 overflow-hidden">
       <div className="flex items-center gap-2 justify-between">
         <p className="font-bold">
           {title} ({users.length})
@@ -32,20 +41,22 @@ export const UsersOnline = ({ users, votedUsers, username, title, children }: IU
       </div>
       {users?.map((user) => {
         const isCurrentUser = user.username === username;
-        
         return (
-          <UserCard
+          <div
             key={user.username}
-            username={user.username}
-            isCurrentUser={isCurrentUser}
-            hasVoted={votedUsers?.has(user.username)}
-            admin={user.admin}
-          />
+            style={{ overflow: "hidden" }}
+          >
+            <UserCard
+              username={user.username}
+              isCurrentUser={isCurrentUser}
+              hasVoted={votedUsers?.has(user.username)}
+              admin={user.admin}
+            />
+          </div>
         );
       })}
-      <div className="mt-3">
-        {children}
-      </div>
+
+      <div className="mt-4">{children}</div>
     </div>
   );
 };
