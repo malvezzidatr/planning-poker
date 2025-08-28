@@ -16,10 +16,6 @@ export default function Header() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    console.log(user)
-  }, [user])
-
   const handleGoHome = () => {
     router.push('/');
   };

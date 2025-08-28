@@ -38,12 +38,13 @@ export const JoinSessionCardGroup = () => {
     });
   };
 
-  const createRoom = (username: string, role: 'player' | 'spectator') => {
+  const createRoom = (username: string, role: 'player' | 'spectator', userStories: { description: string }[]) => {
     const newRoomId = uuid().slice(0, 6);
     router.push(`/room/${newRoomId}`);
     localStorage.setItem("username", username);
     localStorage.setItem("room", newRoomId);
     localStorage.setItem("role", role);
+    localStorage.setItem("userStories", JSON.stringify(userStories))
   };
 
   return (

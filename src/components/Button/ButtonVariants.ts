@@ -1,3 +1,4 @@
+import { animate } from "framer-motion";
 import { tv } from "tailwind-variants";
 
 export const button = tv({

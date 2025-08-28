@@ -1,6 +1,7 @@
 import { GoVerified } from "react-icons/go";
 import Icon from "../Icon/Icon";
 import { Avatar } from "../Avatar/Avatar";
+import Badge from "../Badge/Badge";
 
 interface IUserCardProps {
   username: string;
@@ -24,9 +25,21 @@ export const UserCard = ({
           {isCurrentUser && <p className="text-xs">You</p>}
         </div>
       </div>
-      <div className={`${hasVoted ? 'text-green-700' : 'text-yellow-700'} flex items-center gap-3 font-bold`}>
+      <div className={`flex items-center gap-3 font-bold`}>
         {hasVoted !== undefined && (
-          <p className={`text-xs px-3 py-1 rounded-lg ${hasVoted ? 'bg-green-100 border-[1px] border-green-500' : 'bg-yellow-100 border-[1px] border-yellow-500'}`}>{hasVoted ? 'Voted' : 'Not Voted'}</p>
+          hasVoted ? (
+            <Badge 
+              textColor="text-green-700" 
+              text="Voted" 
+              bgColor="bg-green-200" 
+            />
+          ) : (
+            <Badge 
+              bgColor="bg-orange-200" 
+              textColor="text-orange-700" 
+              text="Voting" 
+            />
+          )
         )}
         {admin && <Icon size={16} color="#FFD700" name="crown" />}
       </div>

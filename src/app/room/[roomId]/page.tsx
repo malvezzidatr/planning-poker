@@ -12,6 +12,7 @@ import { VoteResult } from "@/components/VoteResult/VoteResult";
 import { UsersOnline } from "@/components/UsersOnline/UsersOnline";
 import { useRoom } from "./useRoom";
 import { Footer } from "@/components/Footer/footer";
+import Badge from "@/components/Badge/Badge";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -36,6 +37,9 @@ export default function RoomPage() {
     userIsSpectator,
     handleChangeRole,
     currentUser,
+    userStories,
+    currentStory,
+    nextStory,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -75,8 +79,26 @@ export default function RoomPage() {
                 )}
               </UsersOnline>
             </div>
-            
             <div className="flex-col w-full">
+              <div className="bg-white w-full rounded-lg shadow-sm p-6 mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <p>Story progress</p>
+                  <p><span className="text-green-500">{currentStory + 1} </span>of {userStories.length}</p>
+                </div>
+                <ProgressBar value={(((currentStory + 1) / userStories.length) * 100) || 0} color="bg-blue-500" />
+              </div>
+              <div className="bg-white w-full flex flex-col rounded-lg shadow-sm p-6 mb-8">
+                <div className="flex w-full items-center justify-between mb-4">
+                  <div className="flex gap-2 items-center">
+                    <Icon name="play" size={16} color="#0368DB"/>
+                    <p>New Story - Ready to Vote</p>
+                  </div>
+                  {revealed ? <Badge text="Completed" bgColor="bg-green-200" textColor="text-green-800" /> : <Badge text="Voting" textColor="text-orange-800" bgColor="bg-orange-200" animate />}
+                </div>
+                <div className="w-full bg-green-100 rounded-lg p-4 border-[1px] border-green-400">
+                  <p className="text-gray-600">{userStories[currentStory]?.description}</p>
+                </div>
+              </div>
               {revealed && (
                 <div className="bg-white w-full rounded-lg shadow-sm p-6 mb-8">
                   <div className="flex items-center gap-2">
@@ -102,30 +124,41 @@ export default function RoomPage() {
                       <Icon name="groupOfUsers" color="#D1D5DB" size={65} />
                       <h3 className="text-black text-2xl font-bold mt-2">Ready to Start Voting?</h3>
                       <p className="w-[45%] text-center mt-2">We need at least one player to begin the estimation process. Spectators can observe, but players cast the votes!</p>
-                      <div className="w-full mt-4 rounded-lg bg-yellow-100 p-5 flex flex-col items-center justify-center">
+                      <div className="w-full mt-4 mb-6 rounded-lg bg-yellow-100 p-5 flex flex-col items-center justify-center">
                         <h3 className="font-bold text-yellow-700">How Planning Poker Works</h3>
                         <div className="flex items-center justify-between w-full mt-4">
                           <div className="flex flex-col items-center justify-center">
                             <div className="p-3 w-[260px] flex mb-2 items-center justify-center bg-white rounded-lg">
-                              <Icon name="arrowLeft" />
+                              <Icon name="handPointer" color="#0368DB" />
                             </div>
                             <p className="font-bold">Vote</p>
                             <p>Select story points</p>
                           </div>
                           <div className="flex items-center flex-col justify-center">
                             <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
-                              <Icon name="eye" />
+                              <Icon name="eye" color="#00A63E" />
                             </div>
                             <p className="font-bold">Reveal</p>
                             <p>See all estimates</p>
                           </div>
                           <div className="items-center flex-col flex justify-center">
                             <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
-                              <Icon name="arrowLeft" />
+                              <Icon name="discuss" color="#0368DB" />
                             </div>
                             <p className="font-bold">Discuss</p>
                             <p>Reach consensus</p>
                           </div>
+                        </div>
+                      </div>
+                      <Button iconName="play" onClick={() => {}} text="Become a Player & Start Voting" />
+                      <div className="flex gap-5 mt-4 text-gray-500">
+                        <div className="flex gap-2 text-sm items-center">
+                          <Icon name="share" size={14} color="#0368DB" />
+                          <p>Share room link with team</p>
+                        </div>
+                        <div className="flex gap-2 text-sm items-center">
+                          <Icon name="clock" size={14} color="#F97316" />
+                          <p>Waiting for players...</p>
                         </div>
                       </div>
                     </div>
@@ -193,8 +226,8 @@ export default function RoomPage() {
                     />
                     <Button
                       full
-                      text="Next Story"
-                      onClick={resetVotes}
+                      text={(currentStory + 1) >= userStories.length ? "Finish" : "Next Story"}
+                      onClick={nextStory}
                       iconName="doubleArrowRight"
                       variant="secondary"
                       backgroundColor="green"

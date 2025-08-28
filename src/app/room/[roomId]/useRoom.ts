@@ -23,19 +23,40 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
   const [averageVotes, setAverageVotes] = useState(0);
   const [mostVoted, setMostVoted] = useState(0);
+  const [userStories, setUserStories] = useState<{ description: string }[]>([]);
+  const [currentStory, setCurrentStory] = useState<number>(0);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const role = localStorage.getItem("role");
     const lastRoom = localStorage.getItem("room");
+    const stories = JSON.parse(localStorage.getItem("userStories") || "[]");
+
     if (storedUsername && roomId === lastRoom) {
       setUsername(storedUsername);
       socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: true });
+
+      if (stories.length > 0) {
+        socket.emit("addUserStories", { roomId, userStories: stories });
+      }
     } else {
       setIsOpenModalJoinRoom(true);
       setIsLoading(false);
     }
   }, [roomId]);
+
+  useEffect(() => {
+    const handleUserStoriesUpdate = (stories: { description: string }[]) => {
+      setUserStories(stories);
+      localStorage.setItem("userStories", JSON.stringify(stories));
+    };
+
+    socket.on("userStoriesUpdate", handleUserStoriesUpdate);
+
+    return () => {
+      socket.off("userStoriesUpdate", handleUserStoriesUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }) => {
@@ -58,7 +79,6 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   useEffect(() => {
     const handleRoomUpdate = (users: User[]) => {
-      console.log(users)
       setUsers(users);
       setIsLoading(false);
     };
@@ -181,6 +201,11 @@ export function useRoom(roomId: string | string[] | undefined) {
     setIsOpenModalJoinRoom(false);
   };
 
+  const nextStory = () => {
+    setCurrentStory(prev => prev + 1);
+    resetVotes();
+  }
+
   const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
   const playerUsers = users.filter(user => user.role === 'player');
   const spectatorUsers = users.filter(user => user.role === 'spectator');
@@ -215,5 +240,8 @@ export function useRoom(roomId: string | string[] | undefined) {
     userIsSpectator,
     handleChangeRole,
     currentUser,
+    userStories,
+    currentStory,
+    nextStory,
   };
 }

@@ -21,6 +21,11 @@ import {
   FaGoogle,
   FaAngleDoubleRight,
   FaTrashAlt,
+  FaPlay,
+  FaHandPointer,
+  FaComments,
+  FaClock,
+  FaShare,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
@@ -48,6 +53,11 @@ const icons = {
   google: FaGoogle,
   doubleArrowRight: FaAngleDoubleRight,
   trash: FaTrashAlt,
+  play: FaPlay,
+  handPointer: FaHandPointer,
+  discuss: FaComments,
+  clock: FaClock,
+  share: FaShare,
 } as const;
 
 export type IconName = keyof typeof icons;

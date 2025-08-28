@@ -10,7 +10,7 @@ interface ICreateRoomModal {
   headerDescription?: string;
   isOpen: boolean;
   onClose: () => void;
-  handlePress: (username: string, role: 'player' | 'spectator') => void;
+  handlePress: (username: string, role: 'player' | 'spectator', userStories: { description: string }[]) => void;
 }
 
 export const CreateRoomModal = ({
@@ -76,11 +76,14 @@ export const CreateRoomModal = ({
               </button>
             </div>
             <div className="w-full mt-2 bg-[#F9FAFB] px-3 py-2 rounded-lg flex items-center gap-4">
-              <Input ref={inputRef} placeholder="As I user, I want to" full value={userStoriesValue} setValue={setUserStoriesValue} />
-              <button onClick={handleClearFocusStory} className="rounded-full p-2 hover:bg-gray-300 transitio cursor-pointer">
-                <Icon name="trash" size={16} color="#9CA3AF" />
-              </button>
+              <div className="flex w-full gap-4">
+                <Input ref={inputRef} placeholder="As I user, I want to" full value={userStoriesValue} setValue={setUserStoriesValue} />
+                <button onClick={handleClearFocusStory} className="rounded-full px-3 hover:bg-gray-300 transitio cursor-pointer">
+                  <Icon name="trash" size={16} color="#9CA3AF" />
+                </button>
+              </div>
             </div>
+            <p className="mt-2 mb-4 text-sm text-gray-500">Add stories you want to estimate in this session</p>
           </div>
           {userStories.map((item, index) => (
             <div key={item.description + index} className="w-full mt-2 bg-[#F9FAFB] px-3 py-2 rounded-lg flex items-center gap-4">
@@ -104,7 +107,7 @@ export const CreateRoomModal = ({
         </div>
         <div className="flex justify-between mt-6 gap-4">
           <Button variant="secondary" textCenter full text="Cancel" onClick={onClose} />
-          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator')} />
+          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator', userStories)} />
         </div>
       </div>
     </div>
