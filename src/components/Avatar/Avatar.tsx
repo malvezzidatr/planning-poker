@@ -1,9 +1,8 @@
-// components/Avatar.tsx
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 
 interface AvatarProps {
   name: string;
-  size?: number; // tamanho opcional, em pixels
+  size?: number;
 }
 
 const colors = [
@@ -18,7 +17,7 @@ const colors = [
   "bg-orange-500",
 ];
 
-export const Avatar: React.FC<AvatarProps> = ({ name, size = 48 }) => {
+const AvatarComponent: React.FC<AvatarProps> = ({ name, size = 48 }) => {
   const initials = useMemo(() => {
     const parts = name.trim().split(" ");
     if (parts.length > 1) {
@@ -28,9 +27,13 @@ export const Avatar: React.FC<AvatarProps> = ({ name, size = 48 }) => {
   }, [name]);
 
   const bgColor = useMemo(() => {
-    const index = Math.floor(Math.random() * colors.length);
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
     return colors[index];
-  }, []);
+  }, [name]);
 
   return (
     <div
@@ -41,3 +44,5 @@ export const Avatar: React.FC<AvatarProps> = ({ name, size = 48 }) => {
     </div>
   );
 };
+
+export const Avatar = memo(AvatarComponent);

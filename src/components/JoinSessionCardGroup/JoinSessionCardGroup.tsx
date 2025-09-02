@@ -44,6 +44,7 @@ export const JoinSessionCardGroup = () => {
     localStorage.setItem("username", username);
     localStorage.setItem("room", newRoomId);
     localStorage.setItem("role", role);
+    localStorage.setItem(`admin_${newRoomId}`, "true");
     localStorage.setItem("userStories", JSON.stringify(userStories))
   };
 

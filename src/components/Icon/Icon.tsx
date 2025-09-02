@@ -26,6 +26,8 @@ import {
   FaComments,
   FaClock,
   FaShare,
+  FaCheck,
+  FaUserPlus,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
@@ -58,6 +60,8 @@ const icons = {
   discuss: FaComments,
   clock: FaClock,
   share: FaShare,
+  check: FaCheck,
+  userPlus: FaUserPlus,
 } as const;
 
 export type IconName = keyof typeof icons;

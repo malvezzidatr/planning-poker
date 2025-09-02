@@ -16,7 +16,7 @@ export const HelpfulCard = ({
       <div className="w-14 h-14 bg-blue-200 rounded-full flex items-center justify-center mb-4">
         <Icon color="#0368DB" name={iconName} />
       </div>
-      <p className="text-lg font-semibold mb-3">{title}</p>
+      <h3 className="text-lg font-semibold mb-3 text-center">{title}</h3>
       <p className="text-sm text-gray-600 text-center">{description}</p>
     </div>
   )
