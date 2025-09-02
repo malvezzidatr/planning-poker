@@ -25,16 +25,18 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [mostVoted, setMostVoted] = useState(0);
   const [userStories, setUserStories] = useState<{ description: string }[]>([]);
   const [currentStory, setCurrentStory] = useState<number>(0);
+  const [roomIsFinished, setRoomIsFinished] = useState<boolean>(false);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const role = localStorage.getItem("role");
     const lastRoom = localStorage.getItem("room");
     const stories = JSON.parse(localStorage.getItem("userStories") || "[]");
+    const isAdmin = localStorage.getItem(`admin_${roomId}`) === "true";
 
     if (storedUsername && roomId === lastRoom) {
       setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: true });
+      socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: isAdmin });
 
       if (stories.length > 0) {
         socket.emit("addUserStories", { roomId, userStories: stories });
@@ -206,6 +208,14 @@ export function useRoom(roomId: string | string[] | undefined) {
     resetVotes();
   }
 
+  const handleFinishSession = () => {
+    setRoomIsFinished(true);
+  }
+
+  const handleCloseFinishModal = () => {
+    setRoomIsFinished(false);
+  }
+
   const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
   const playerUsers = users.filter(user => user.role === 'player');
   const spectatorUsers = users.filter(user => user.role === 'spectator');
@@ -243,5 +253,8 @@ export function useRoom(roomId: string | string[] | undefined) {
     userStories,
     currentStory,
     nextStory,
+    handleFinishSession,
+    roomIsFinished,
+    handleCloseFinishModal,
   };
 }

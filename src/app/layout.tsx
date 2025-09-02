@@ -15,11 +15,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Planning Poker Online - Agile Estimation Tool for Scrum Teams",
+  title: "Planning Poker Online Free - Agile Estimation Tool for Scrum Teams",
   description: "Free Planning Poker online tool for Scrum and Agile teams. Estimate tasks collaboratively with real-time voting and team engagement.",
   icons: {
     icon: "/favicon.ico",
   },
+  openGraph: {
+    title: "Planning Poker Online Free — Agile Estimation Tool for Scrum Teams",
+    description: "Free Planning Poker online tool for Scrum and Agile teams. Estimate tasks collaboratively with real-time voting and team engagement.",
+    type: "website",
+    images: ["/favicon-80x80.png"],
+    url: "https://planningpokerapp.com.br/" },
+    twitter: {
+      card: "summary_large_image",
+      title: "Planning Poker Online Free — Agile Estimation Tool for Scrum Teams",
+      description: "Free Planning Poker online tool for Scrum and Agile teams. Estimate tasks collaboratively with real-time voting and team engagement.",
+      images: ["https://planningpokerapp.com.br/favicon-80x80.png"]
+    },
 };
 
 export default function RootLayout({
@@ -47,6 +59,8 @@ export default function RootLayout({
         <meta name="twitter:description" content="Estimate tasks collaboratively with your Agile team using Planning Poker online." />
         <meta name="twitter:image" content="https://planningpokerapp.com.br/og-image.png" />
         <link rel="canonical" href="https://planningpokerapp.com.br/" />
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3369022276642297"
+          crossOrigin="anonymous"></Script>
         <Script id="ld-json" type="application/ld+json" strategy="afterInteractive">
           {`
             {

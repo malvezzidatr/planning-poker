@@ -13,6 +13,7 @@ import { UsersOnline } from "@/components/UsersOnline/UsersOnline";
 import { useRoom } from "./useRoom";
 import { Footer } from "@/components/Footer/footer";
 import Badge from "@/components/Badge/Badge";
+import { SessionCompleteModal } from "@/components/SessionCompleteModal/SessionCompleteModal";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -40,6 +41,9 @@ export default function RoomPage() {
     userStories,
     currentStory,
     nextStory,
+    roomIsFinished,
+    handleFinishSession,
+    handleCloseFinishModal,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -62,8 +66,17 @@ export default function RoomPage() {
           </div>
           <div className="flex flex-col lg:flex-row gap-8 mt-6">
             <div className="flex-col flex gap-8">
-              <UsersOnline title="Players" users={playerUsers} votedUsers={votedUsers} username={username}>
-                {userIsSpectator && (
+              <UsersOnline title="Players" users={playerUsers} type="player" votedUsers={votedUsers} username={username}>
+                {playerUsers.length === 0 ? (
+                  <div className="w-full relative">
+                    <div className="h-full shadow-2xl rounded-lg absolute shadow-blue-500 z-0 w-full animate-pulse" />
+                    <button onClick={handleChangeRole} className="cursor-pointer transition hover:bg-blue-50 w-full bg-white rounded-lg relative z-10 flex flex-col items-center justify-center px-4 py-8 bg-white-100 border-2 border-dashed border-gray-300">
+                      <Icon name="userPlus" color="#6a7282" size={40} />
+                      <p className="text-gray-600">No players yet</p>
+                      <p className="text-gray-500 text-xs whitespace-break-spaces">Waiting for someone to join as {"\n"} player</p>
+                    </button>
+                  </div>
+                ) : userIsSpectator && (
                   <button onClick={handleChangeRole} className="flex gap-3 w-full items-center cursor-pointer transition justify-center text-center text-blue-500 hover:text-blue-700">
                     <Icon name="change" size={16} />
                     <p className="text-sm">Join as Player</p>
@@ -124,25 +137,25 @@ export default function RoomPage() {
                       <Icon name="groupOfUsers" color="#D1D5DB" size={65} />
                       <h3 className="text-black text-2xl font-bold mt-2">Ready to Start Voting?</h3>
                       <p className="w-[45%] text-center mt-2">We need at least one player to begin the estimation process. Spectators can observe, but players cast the votes!</p>
-                      <div className="w-full mt-4 mb-6 rounded-lg bg-yellow-100 p-5 flex flex-col items-center justify-center">
-                        <h3 className="font-bold text-yellow-700">How Planning Poker Works</h3>
-                        <div className="flex items-center justify-between w-full mt-4">
+                      <div className="w-full mt-4 mb-6 rounded-lg bg-yellow-100 p-5 py-10 flex flex-col items-center justify-center">
+                        <h3 className="font-bold text-yellow-700 mb-5">How Planning Poker Works</h3>
+                        <div className="w-full py-2 mt-4 grid lg:grid-cols-3 md:grid-cols-1">
                           <div className="flex flex-col items-center justify-center">
-                            <div className="p-3 w-[260px] flex mb-2 items-center justify-center bg-white rounded-lg">
+                            <div className="p-3 w-[170px] xl:w-[240px] flex mb-2 items-center justify-center bg-white rounded-lg">
                               <Icon name="handPointer" color="#0368DB" />
                             </div>
                             <p className="font-bold">Vote</p>
                             <p>Select story points</p>
                           </div>
                           <div className="flex items-center flex-col justify-center">
-                            <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
+                            <div className="p-3 w-[170px] xl:w-[240px] mb-2 flex justify-center bg-white rounded-lg">
                               <Icon name="eye" color="#00A63E" />
                             </div>
                             <p className="font-bold">Reveal</p>
                             <p>See all estimates</p>
                           </div>
                           <div className="items-center flex-col flex justify-center">
-                            <div className="p-3 w-[260px] mb-2 flex justify-center bg-white rounded-lg">
+                            <div className="p-3 w-[170px] xl:w-[240px] mb-2 flex justify-center bg-white rounded-lg">
                               <Icon name="discuss" color="#0368DB" />
                             </div>
                             <p className="font-bold">Discuss</p>
@@ -150,7 +163,7 @@ export default function RoomPage() {
                           </div>
                         </div>
                       </div>
-                      <Button iconName="play" onClick={() => {}} text="Become a Player & Start Voting" />
+                      <Button iconName="play" onClick={handleChangeRole} text="Become a Player & Start Voting" />
                       <div className="flex gap-5 mt-4 text-gray-500">
                         <div className="flex gap-2 text-sm items-center">
                           <Icon name="share" size={14} color="#0368DB" />
@@ -227,7 +240,7 @@ export default function RoomPage() {
                     <Button
                       full
                       text={(currentStory + 1) >= userStories.length ? "Finish" : "Next Story"}
-                      onClick={nextStory}
+                      onClick={(currentStory + 1) >= userStories.length ? handleFinishSession : nextStory}
                       iconName="doubleArrowRight"
                       variant="secondary"
                       backgroundColor="green"
@@ -248,6 +261,10 @@ export default function RoomPage() {
         headerDescription="Please provide your details to join the session."
         handlePress={joinRoom}
         handleCancel={() => router.push('/')}
+      />
+      <SessionCompleteModal
+        onClose={handleCloseFinishModal}
+        isOpen={roomIsFinished}
       />
     </>
   );

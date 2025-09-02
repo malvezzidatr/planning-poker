@@ -23,7 +23,6 @@ export const CreateRoomModal = ({
   const [name, setName] = useState("");
   const [userStories, setUserStories] = useState<{ description: string }[]>([])
   const [userStoriesValue, setUserStoriesValue] = useState<string>("");
-  const [roomName, setRoomName] = useState("");
   const [isPlayer, setIsPlayer] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -52,8 +51,8 @@ export const CreateRoomModal = ({
       style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
       className="fixed inset-0 flex-col justify-center items-center z-50 flex"
     >
-      <div className="bg-white text-black p-6 rounded-lg shadow-lg overflow-scroll h-[700px] w-[750px]">
-        <div className="mb-10">
+      <div className="bg-white relative text-black  rounded-lg shadow-lg overflow-scroll h-[700px] w-[750px]">
+        <div className="sticky top-0 p-6 bg-white">
           <div className="flex items-center justify-between">
             <p className="text-2xl font-bold">{headerTitle}</p>
             <div onClick={onClose}>
@@ -62,10 +61,9 @@ export const CreateRoomModal = ({
           </div>
           <p>{headerDescription}</p>
         </div>
-        <div>
+        <div className="p-6">
           <div className="mb-6 flex gap-4">
             <Input value={name} setValue={setName} labelText="Your Name *" placeholder="Enter your name" full />
-            {/* <Input value={roomName} setValue={setRoomName} labelText="Room Name (optional)" placeholder="Sprint planning session" full /> */}
           </div>
           <div className="mt-6">
             <div className="flex items-center justify-between w-full">
@@ -77,7 +75,19 @@ export const CreateRoomModal = ({
             </div>
             <div className="w-full mt-2 bg-[#F9FAFB] px-3 py-2 rounded-lg flex items-center gap-4">
               <div className="flex w-full gap-4">
-                <Input ref={inputRef} placeholder="As I user, I want to" full value={userStoriesValue} setValue={setUserStoriesValue} />
+                <Input
+                  ref={inputRef}
+                  placeholder="As I user, I want to"
+                  full
+                  value={userStoriesValue}
+                  setValue={setUserStoriesValue}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddStory();
+                    }
+                  }}
+                />
                 <button onClick={handleClearFocusStory} className="rounded-full px-3 hover:bg-gray-300 transitio cursor-pointer">
                   <Icon name="trash" size={16} color="#9CA3AF" />
                 </button>
@@ -105,9 +115,9 @@ export const CreateRoomModal = ({
             </div>
           </div>
         </div>
-        <div className="flex justify-between mt-6 gap-4">
+        <div className="sticky bottom-0 bg-white flex justify-between gap-4 p-4">
           <Button variant="secondary" textCenter full text="Cancel" onClick={onClose} />
-          <Button full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator', userStories)} />
+          <Button disabled={!!!name} full text="Create Room" textCenter iconName="plus" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator', userStories)} />
         </div>
       </div>
     </div>
