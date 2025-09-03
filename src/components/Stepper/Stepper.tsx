@@ -55,14 +55,6 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
       </div>
 
       <ProgressBar color="bg-black" value={((currentStep) / (steps.length)) * 100} />
-      {/* <div className="relative mt-4 h-1 bg-gray-200 rounded-full">
-        <div
-          className="absolute top-0 left-0 h-1 bg-gray-900 rounded-full transition-all duration-300"
-          style={{
-            width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
-          }}
-        />
-      </div> */}
     </div>
   );
 };
