@@ -5,7 +5,7 @@ import { JoinSessionCard } from "../JoinSessionCard/JoinSessionCard"
 import { useState } from "react";
 import { CreateRoomModal } from "../CreateRoomModal/CreateRoomModal";
 import { v4 as uuid } from "uuid";
-import { Alert } from "../Alert/Alert";
+import { Toast } from "../Toast/Toast";
 import { AnimatePresence } from "framer-motion";
 import socket from "@/lib/socket";
 import { CreateRoomModalStepByStep } from "../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
@@ -52,7 +52,7 @@ export const JoinSessionCardGroup = () => {
   return (
     <>
       <AnimatePresence>
-        {errorMessage && <Alert type="warning" iconName="attention" text={errorMessage} closable onClose={() => setErrorMessage("")} />}
+        {errorMessage && <Toast type="warning" iconName="attention" text={errorMessage} closable onClose={() => setErrorMessage("")} />}
       </AnimatePresence>
       <div className="flex lg:flex-row gap-5 mt-5 flex-col">
         <JoinSessionCard buttonBackgroundColor="blue" primaryColor="blue" buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
