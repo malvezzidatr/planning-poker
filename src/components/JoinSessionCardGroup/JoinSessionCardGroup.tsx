@@ -8,6 +8,7 @@ import { v4 as uuid } from "uuid";
 import { Alert } from "../Alert/Alert";
 import { AnimatePresence } from "framer-motion";
 import socket from "@/lib/socket";
+import { CreateRoomModalStepByStep } from "../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
 
 export const JoinSessionCardGroup = () => {
   const [roomCode, setRoomCode] = useState<string>("");
@@ -57,13 +58,14 @@ export const JoinSessionCardGroup = () => {
         <JoinSessionCard buttonBackgroundColor="blue" primaryColor="blue" buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
         <JoinSessionCard buttonBackgroundColor="green" primaryColor="green" buttonIconName="handTogether" onClick={joinRoom} iconName="groupOfUsers" description="Have a room code? Join your team's estimation session." title="Join Existing Room" buttonText="Join Room" input={{ value: roomCode, setValue: setRoomCode }} />
       </div>
-      <CreateRoomModal
+      {/* <CreateRoomModal
         onClose={() => setIsCreateRoomModalOpen(false)}
         isOpen={isCreateRoomModalOpen}
         headerTitle="Create Room"
         headerDescription="Set up your planning session and invite your team"
         handlePress={createRoom}
-      />
+      /> */}
+      <CreateRoomModalStepByStep />
     </>
   )
 }
