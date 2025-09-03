@@ -1,12 +1,11 @@
-import { animate } from "framer-motion";
 import { tv } from "tailwind-variants";
 
 export const button = tv({
-  base: "flex items-center py-3 px-6 rounded-lg cursor-pointer transition-colors",
+  base: "flex items-center py-2.5 px-8 rounded-lg cursor-pointer transition-all",
   variants: {
     variant: {
-      primary: "bg-[#0067DA] hover:bg-[#0056B3] text-white",
-      secondary: "bg-gray-100 hover:bg-gray-200 text-gray-800",
+      primary: "bg-blue-500 hover:opacity-85 text-white",
+      secondary: "bg-white-100 hover:bg-gray-100 text-gray-800",
     },
     full: {
       true: "w-full",

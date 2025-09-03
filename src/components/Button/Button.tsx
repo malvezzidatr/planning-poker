@@ -30,12 +30,13 @@ export const Button = ({
     <button className={button({ variant, full, textCenter, outlined, disabled, backgroundColor })} disabled={disabled} onClick={onClick}>
       {iconName && (
         <Icon
+          className="mr-2"
           size={14}
           name={iconName}
           color={iconColor}
         />
       )}
-      <p className="ml-2 text-sm font-bold">{text}</p>
+      <p className="text-sm font-bold">{text}</p>
     </button>
   );
 };
