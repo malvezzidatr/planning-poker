@@ -3,9 +3,13 @@
 import { useState } from "react"
 import Stepper from "../Stepper/Stepper"
 import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import Icon from "../Icon/Icon";
+import { YourInfo } from "./components/YourInfo/YourInfo";
 
 export const CreateRoomModalStepByStep = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [name, setName] = useState<string>('');
 
   const nextStep = () => {
     setCurrentStep(prevState => prevState + 1);
@@ -25,7 +29,12 @@ export const CreateRoomModalStepByStep = () => {
         <div className="mt-2 p-6 w-full">
           <Stepper currentStep={currentStep} />
         </div>
-        <div className="flex sticky bottom-0 bg-white w-full justify-end gap-4 px-6">
+        {
+          currentStep === 1 && (
+            <YourInfo setName={setName} name={name} />
+          )
+        }
+        <div className="flex absolute border-t-[1px] border-t-gray-300 pt-6 bottom-5 bg-white w-full justify-end gap-4 px-6">
           {currentStep !== 1 && (
             <Button onClick={previousStep} outlined variant="secondary" text="Back" />
           )}
