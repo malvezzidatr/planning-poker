@@ -21,13 +21,12 @@ export const Button = ({
   full,
   variant = "primary",
   textCenter = false,
-  outlined,
   disabled,
   backgroundColor = 'none',
   iconColor,
 }: IButtonProps) => {
   return (
-    <button className={button({ variant, full, textCenter, outlined, disabled, backgroundColor })} disabled={disabled} onClick={onClick}>
+    <button className={button({ variant, full, textCenter, disabled, backgroundColor })} disabled={disabled} onClick={onClick}>
       {iconName && (
         <Icon
           className="mr-2"
