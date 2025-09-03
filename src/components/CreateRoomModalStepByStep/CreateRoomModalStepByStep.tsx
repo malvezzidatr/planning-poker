@@ -5,6 +5,7 @@ import Stepper from "../Stepper/Stepper"
 import { Button } from "../Button/Button";
 import { YourInfo } from "./components/YourInfo/YourInfo";
 import { UserStories } from "./components/UserStories/UserStories";
+import { DeckAndSettings } from "./components/DeckAndSettings/DeckAndSettings";
 
 export const CreateRoomModalStepByStep = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -40,6 +41,11 @@ export const CreateRoomModalStepByStep = () => {
               setUserStories={setUserStories}
               userStories={userStories}
             />
+          )
+        }
+        {
+          currentStep === 3 && (
+            <DeckAndSettings />
           )
         }
         <div className="flex sticky border-t-[1px] border-t-gray-300 pt-6 bottom-5 bg-white w-full justify-end gap-4 px-6">

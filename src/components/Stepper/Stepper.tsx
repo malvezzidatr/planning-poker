@@ -8,7 +8,7 @@ interface StepperProps {
 const steps = [
   { number: 1, label: "Your info" },
   { number: 2, label: "User stories" },
-  { number: 3, label: "Deck & settings" },
+  { number: 3, label: "Deck" },
   { number: 4, label: "Review" },
 ];
 
@@ -30,19 +30,21 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
                   className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium
                   ${
                     isActive
-                      ? "bg-gray-900 text-white"
+                      ? "bg-gray-900 text-white shadow shadow-black"
                       : isCompleted
                       ? "bg-gray-200 text-gray-700"
                       : "bg-gray-100 text-gray-500"
                   }`}
                 >
-                  {step.number}
+                  <p className={`${isActive && 'font-bold'}`}>
+                    {step.number}
+                  </p>
                 </div>
 
                 <span
                   className={`mt-2 text-sm ${
                     isActive
-                      ? "text-gray-900 font-medium"
+                      ? "text-gray-900 font-bold"
                       : "text-gray-500"
                   }`}
                 >
