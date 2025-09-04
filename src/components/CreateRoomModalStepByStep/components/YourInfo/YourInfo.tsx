@@ -58,7 +58,7 @@ export const YourInfo = ({
           <UserRoleCard testID="role-card-spectator" onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
         </div>
       </div>
-      <div className="mt-4">
+      <div className="my-4">
         <Alert iconName="infoCircle" text="We'll use your name to display who votes in the sessions" />
       </div>
     </div>

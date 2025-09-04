@@ -41,8 +41,8 @@ export const UserStories = ({
         <div className="p-2 border-[1px] mb-10 border-gray-300 rounded-lg flex flex-col gap-3">
           {userStories.length > 0 ? (
             userStories.map((storie, index) => (
-              <div className="flex gap-4">
-                <Input readOnly key={storie} value={storie} full setValue={() => {}} />
+              <div key={storie + index} className="flex gap-4">
+                <Input readOnly value={storie} full setValue={() => {}} />
                 <button onClick={() => handleRemoveStory(index)} className="rounded-full flex justify-center items-center h-11 w-11 hover:bg-gray-300 transitio cursor-pointer">
                   <Icon name="trash" size={16} color="#9CA3AF" />
                 </button>
