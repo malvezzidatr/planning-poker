@@ -1,7 +1,7 @@
 import React from "react";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 
-interface StepperProps {
+interface IStepperProps {
   currentStep: number;
 }
 
@@ -12,7 +12,7 @@ const steps = [
   { number: 4, label: "Review" },
 ];
 
-const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
+const Stepper= ({ currentStep }: IStepperProps) => {
   return (
     <div className="w-full">
       <div className="flex mb-5">

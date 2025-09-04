@@ -1,9 +1,11 @@
 import Icon from "@/components/Icon/Icon"
 import { Input } from "@/components/Input/Input"
+import { useRoomStore } from "@/store/roomStore";
 
 export const Review = () => {
   const fibonacci = ["0", "1", "2", "3", "5", "8", "13", "21", "?"];
-
+  const { name, role, userStories, deck, settings } = useRoomStore();
+  console.log(settings);
   return (
     <div className="flex flex-col w-full items-center px-6 overflow-y-auto pb-8">
       <p>Review your room settings</p>
@@ -18,11 +20,11 @@ export const Review = () => {
           </div>
           <div className="flex items-center justify-between mb-2">
             <p className="text-gray-700">Name:</p>
-            <p className="font-bold">Caio</p>
+            <p className="font-bold">{name}</p>
           </div>
           <div className="flex items-center justify-between">
             <p className="text-gray-700">Role:</p>
-            <p className="font-bold">Player</p>
+            <p className="font-bold">{role}</p>
           </div>
         </div>
         <div className="border border-gray-900 mt-6 flex flex-col p-4 w-full rounded-lg">
@@ -34,13 +36,13 @@ export const Review = () => {
           </div>
           <div className="w-full flex justify-between items-center mb-2">
             <p className="text-gray-700">Total stories</p>
-            <p>5 stories</p>
+            <p>{userStories.length} stories</p>
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-xs">Preview:</p>
-            <Input value="XDSAD" readOnly setValue={() => {}} />
-            <Input value="XDSAD" readOnly setValue={() => {}} />
-            <Input value="XDSAD" readOnly setValue={() => {}} />
+            {userStories.map(story => (
+              <Input key={story} value={story} readOnly setValue={() => {}} />
+            ))}
           </div>
         </div>
         <div className="border border-gray-900 mt-6 flex flex-col p-4 w-full rounded-lg">
@@ -52,7 +54,7 @@ export const Review = () => {
           </div>
           <div className="w-full flex justify-between items-center mb-2">
             <p className="text-gray-700">Deck:</p>
-            <p>Fibonacci</p>
+            <p>{deck}</p>
           </div>
           <div className="flex flex-wrap gap-2.5 mt-3.5">
             {fibonacci.map((num) => (
@@ -61,13 +63,17 @@ export const Review = () => {
               </div>
             ))}
           </div>
-          <div className="mt-4">
-            <p className="mb-1">Active settings:</p>
-            <div className="flex items-center gap-2">
-              <Icon size={12} name="check" />
-              <p className="text-xs">Allow timer</p>
-            </div>
-          </div>
+          {
+            settings.enableTimer && (
+              <div className="mt-4">
+                <p className="mb-1 text-sm">Active settings:</p>
+                  <div className="flex items-center gap-2">
+                    <Icon size={12} name="check" />
+                    <p className="text-xs">Allow timer</p>
+                  </div>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
