@@ -65,7 +65,7 @@ export const JoinSessionCardGroup = () => {
         headerDescription="Set up your planning session and invite your team"
         handlePress={createRoom}
       /> */}
-      <CreateRoomModalStepByStep />
+      <CreateRoomModalStepByStep isOpen={isCreateRoomModalOpen} closeModal={() => setIsCreateRoomModalOpen(false)} />
     </>
   )
 }

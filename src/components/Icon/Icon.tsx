@@ -30,6 +30,8 @@ import {
   FaUserPlus,
   FaSignOutAlt,
   FaInfoCircle,
+  FaListUl,
+  FaLayerGroup,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
@@ -66,6 +68,8 @@ const icons = {
   userPlus: FaUserPlus,
   logout: FaSignOutAlt,
   infoCircle: FaInfoCircle,
+  list: FaListUl,
+  layerGroup: FaLayerGroup,
 } as const;
 
 export type IconName = keyof typeof icons;

@@ -21,9 +21,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
   ...props
 }, ref) => {
   return (
-    <div className={`flex flex-col bg-red-50 ${full && 'w-full'} rounded-lg`}>
+    <div className={`flex flex-col ${full && 'w-full'} rounded-lg`}>
       {labelText && <p className="text-md text-black mb-2">{labelText}</p>}
-      <div className={`pr-4 py-3 ${props.readOnly ? 'bg-gray-100 text-white' : 'bg-white'} border-gray-900 shadow-md flex items-center rounded-lg justify-between border-[1px] ${full && 'w-full'}`}>
+      <div className={`pr-4 py-3 ${props.readOnly ? 'bg-gray-100 text-gray-600' : 'bg-white'} border-gray-900 shadow-md flex items-center rounded-lg justify-between border-[1px] ${full && 'w-full'}`}>
         <input
           {...props}
           ref={ref}
