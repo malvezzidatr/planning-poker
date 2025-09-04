@@ -49,10 +49,7 @@ export const CreateRoomModalStepByStep = ({
         }
         {
           currentStep === 2 && (
-            <UserStories
-              setUserStories={setUserStories}
-              userStories={userStories}
-            />
+            <UserStories />
           )
         }
         {

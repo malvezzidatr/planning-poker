@@ -5,6 +5,7 @@ import { SetStateAction, useEffect, useState } from "react"
 import { auth, provider } from "@/lib/firebase";
 import { signOut, signInWithPopup, User } from "firebase/auth";
 import { Alert } from "@/components/Alert/Alert";
+import { useRoomStore } from "@/store/roomStore";
 
 interface IYourInfoProps {
   setName: React.Dispatch<SetStateAction<string>>;
@@ -12,20 +13,24 @@ interface IYourInfoProps {
 }
 
 export const YourInfo = ({
-  setName,
-  name
 }: IYourInfoProps) => {
   const [isPlayer, setIsPlayer] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
+  const { name, setName, role, setRole } = useRoomStore();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    setName(user?.displayName || "");
+  }, [user])
+
   const handleRoleChange = (role: "player" | "spectator") => {
-    setIsPlayer(role === "player");
+    setRole(role);
   };
+
 
   const handleSignIn = async () => {
     try {
@@ -54,8 +59,8 @@ export const YourInfo = ({
       <div className="mt-6 flex flex-col gap-4">
         <p className="text-md text-black">Your role *</p>
         <div className="flex gap-4">
-          <UserRoleCard testID="role-card-player" onPress={() => handleRoleChange("player")} active={isPlayer} type="Player" description="Vote on estimates" iconName="user" />
-          <UserRoleCard testID="role-card-spectator" onPress={() => handleRoleChange("spectator")} active={!isPlayer} type="Spectator" description="Watch only" iconName="eye" />
+          <UserRoleCard testID="role-card-player" onPress={() => handleRoleChange("player")} active={role === 'player'} type="Player" description="Vote on estimates" iconName="user" />
+          <UserRoleCard testID="role-card-spectator" onPress={() => handleRoleChange("spectator")} active={role === 'spectator'} type="Spectator" description="Watch only" iconName="eye" />
         </div>
       </div>
       <div className="my-4">
