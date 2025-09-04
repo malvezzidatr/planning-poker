@@ -5,7 +5,6 @@ import { useRoomStore } from "@/store/roomStore";
 export const Review = () => {
   const fibonacci = ["0", "1", "2", "3", "5", "8", "13", "21", "?"];
   const { name, role, userStories, deck, settings } = useRoomStore();
-  console.log(settings);
   return (
     <div className="flex flex-col w-full items-center px-6 overflow-y-auto pb-8">
       <p>Review your room settings</p>

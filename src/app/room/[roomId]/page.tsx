@@ -47,6 +47,10 @@ export default function RoomPage() {
     handleCloseFinishModal,
     hasTimer,
     time,
+    socket,
+    timerRunning,
+    timerStartedAt,
+    timeLeft,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -65,7 +69,14 @@ export default function RoomPage() {
         <div className="w-full mx-auto mt-10 md:mt-20 flex flex-col text-black rounded-lg">
           {hasTimer && (
             <div className="self-end mb-4 flex gap-4 items-center">
-              <Timer initialTime={time} />
+              <Timer
+                duration={timeLeft}
+                running={timerRunning}
+                startedAt={timerStartedAt}
+                onStart={() => socket.emit('startTimer', { roomId, duration: Number(time) })}
+                onPause={() => socket.emit('pauseTimer', { roomId })}
+                onReset={() => socket.emit('resetTimer', { roomId, duration: Number(time) })}
+              />
             </div>
           )}
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
