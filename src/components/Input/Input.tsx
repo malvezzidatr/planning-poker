@@ -21,16 +21,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
   ...props
 }, ref) => {
   return (
-    <div className="flex flex-col w-full">
+    <div className={`flex flex-col bg-red-50 ${full && 'w-full'} rounded-lg`}>
       {labelText && <p className="text-md text-black mb-2">{labelText}</p>}
-      <div className={`pr-4 py-3 ${props.readOnly ? 'bg-gray-200' : 'bg-white'} border-[#D1D5DA] flex items-center rounded-lg justify-between border-[1px] ${full ? 'w-full' : 'w-[250px]'}`}>
+      <div className={`pr-4 py-3 ${props.readOnly ? 'bg-gray-100 text-white' : 'bg-white'} border-gray-900 shadow-md flex items-center rounded-lg justify-between border-[1px] ${full && 'w-full'}`}>
         <input
           {...props}
           ref={ref}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
-          className="w-10/12 h-full px-4 placeholder:text-[#9BA3AF] outline-0 font-bold text-sm"
+          className="w-full h-full px-4 placeholder:text-gray-500 outline-0 font-bold text-sm"
         />
         {iconName && (
           <button onClick={onClickIcon} className="flex items-center justify-center h-full">
