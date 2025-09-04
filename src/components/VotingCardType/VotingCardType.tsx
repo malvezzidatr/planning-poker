@@ -20,7 +20,7 @@ export const VotingCardType = ({
       <p className={`text-lg`}>{type}</p>
       <p className={`text-sm`}>{description}</p>
       <div className="flex flex-wrap gap-2.5 mt-3.5">
-        {fibonacci.map((num, index) => (
+        {fibonacci.map((num) => (
           <div className="px-2 py-1 bg-white border-black shadow-white flex rounded-md shadow-xs" key={num}>
             <span className="text-[#374151] text-sm font-bold">{num}</span>
           </div>
