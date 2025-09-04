@@ -16,7 +16,7 @@ export const VotingCardType = ({
   const fibonacci = ["0", "1", "2", "3", "5", "8", "13", "21", "?"];
 
   return (
-    <div data-testid="voting-card-type" className={`transition cursor-pointer w-full h-[140px] border-2 border-[#E4E7EB] rounded-lg bg-[#F9FAFB] flex flex-col items-center order-black justify-center ${active ? "bg-gray-950 text-white" : "bg-white text-black"}`} onClick={onPress}>
+    <div data-testid="voting-card-type" className={`transition cursor-pointer w-full h-[140px] border-2 border-[#E4E7EB] rounded-lg bg-[#F9FAFB] flex flex-col items-center order-black justify-center ${active ? "bg-gray-900 text-white" : "bg-white text-black"}`} onClick={onPress}>
       <p className={`text-lg`}>{type}</p>
       <p className={`text-sm`}>{description}</p>
       <div className="flex flex-wrap gap-2.5 mt-3.5">

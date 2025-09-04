@@ -1,5 +1,6 @@
 import { SetStateAction } from "react";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type Role = "player" | "spectator";
 
@@ -27,48 +28,59 @@ interface RoomStore extends RoomData {
   setTimer: (value: SetStateAction<string>) => void;
 }
 
-export const useRoomStore = create<RoomStore>((set) => ({
-  name: "",
-  role: "player",
-  userStories: [],
-  deck: "Fibonacci",
-  settings: {
-    enableTimer: false,
-    timer: "60"
-  },
-
-  setName: (value) =>
-    set((state) => ({
-      name: typeof value === "function" ? value(state.name) : value,
-    })),
-  setRole: (role) => set({ role }),
-  addUserStory: (story) =>
-    set((state) => ({ userStories: [...state.userStories, story] })),
-  removeUserStory: (index) =>
-    set((state) => ({
-      userStories: state.userStories.filter((_, i) => i !== index),
-    })),
-  setDeck: (deck) => set({ deck }),
-  toggleTimer: () =>
-    set((state) => ({
-      settings: { ...state.settings, enableTimer: !state.settings.enableTimer },
-    })),
-  setTimer: (value) =>
-  set((state) => ({
-    settings: {
-      ...state.settings,
-      timer:
-        typeof value === "function"
-          ? value(state.settings.timer)
-          : value,
-    },
-  })),
-  reset: () =>
-    set({
+export const useRoomStore = create<RoomStore>()(
+  persist(
+    (set) => ({
       name: "",
       role: "player",
       userStories: [],
       deck: "Fibonacci",
-      settings: { enableTimer: false, timer: "60" },
+      settings: {
+        enableTimer: false,
+        timer: "60",
+      },
+
+      setName: (value) =>
+        set((state) => ({
+          name: typeof value === "function" ? value(state.name) : value,
+        })),
+      setRole: (role) => set({ role }),
+      addUserStory: (story) =>
+        set((state) => ({ userStories: [...state.userStories, story] })),
+      removeUserStory: (index) =>
+        set((state) => ({
+          userStories: state.userStories.filter((_, i) => i !== index),
+        })),
+      setDeck: (deck) => set({ deck }),
+      toggleTimer: () =>
+        set((state) => ({
+          settings: { ...state.settings, enableTimer: !state.settings.enableTimer },
+        })),
+      setTimer: (value) =>
+        set((state) => ({
+          settings: {
+            ...state.settings,
+            timer:
+              typeof value === "function"
+                ? value(state.settings.timer)
+                : value,
+          },
+        })),
+      reset: () =>
+        set({
+          name: "",
+          role: "player",
+          userStories: [],
+          deck: "Fibonacci",
+          settings: { enableTimer: false, timer: "60" },
+        }),
     }),
-}));
+    {
+      name: "room-name-storage",
+      partialize: (state) => ({ name: state.name }),
+      onRehydrateStorage: () => (state) => {
+        console.log("hydrated!")
+      }
+    }
+  )
+);
