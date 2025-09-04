@@ -1,20 +1,17 @@
 import { tv } from "tailwind-variants";
 
 export const button = tv({
-  base: "flex items-center py-3 px-6 rounded-lg cursor-pointer transition-colors",
+  base: "flex items-center py-2.5 px-8 rounded-lg cursor-pointer transition-all border-[1px] h-11 border-black transition-all text-nowrap",
   variants: {
     variant: {
-      primary: "bg-[#0067DA] hover:bg-[#0056B3] text-white",
-      secondary: "bg-gray-100 hover:bg-gray-200 text-gray-800",
+      primary: "bg-black hover:opacity-85 text-white hover:shadow-md shadow-black",
+      secondary: "bg-white text-black shadow-sm hover:bg-black hover:text-white",
     },
     full: {
       true: "w-full",
     },
     textCenter: {
       true: "justify-center items-center",
-    },
-    outlined: {
-      true: "border-2 border-blue-500"
     },
     backgroundColor: {
       green: "bg-green-600 hover:bg-green-700 text-white",

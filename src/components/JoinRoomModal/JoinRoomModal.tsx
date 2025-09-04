@@ -57,7 +57,7 @@ export const JoinRoomModal = ({
         </div>
         <div className="flex justify-between mt-6 gap-4">
           <Button variant="secondary" full text="Cancel" onClick={handleCancel ?? onClose} />
-          <Button full text="Join Room" iconName="arrowRight" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator')} />
+          <Button disabled={!!!name} full text="Join Room" iconName="arrowRight" onClick={() => handlePress(name, isPlayer ? 'player' : 'spectator')} />
         </div>
       </div>
     </div>

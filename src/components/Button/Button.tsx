@@ -11,6 +11,7 @@ interface IButtonProps {
   outlined?: boolean;
   disabled?: boolean;
   backgroundColor?: 'blue' | 'green' | 'red' | 'none';
+  iconColor?: string;
 }
 
 export const Button = ({
@@ -20,20 +21,21 @@ export const Button = ({
   full,
   variant = "primary",
   textCenter = false,
-  outlined,
   disabled,
   backgroundColor = 'none',
+  iconColor,
 }: IButtonProps) => {
   return (
-    <button className={button({ variant, full, textCenter, outlined, disabled, backgroundColor })} disabled={disabled} onClick={onClick}>
+    <button className={button({ variant, full, textCenter, disabled, backgroundColor })} disabled={disabled} onClick={onClick}>
       {iconName && (
         <Icon
+          className="mr-2"
           size={14}
           name={iconName}
-          color={variant === "primary" ? "#FFF" : "#374151"}
+          color={iconColor}
         />
       )}
-      <p className="ml-2 text-sm">{text}</p>
+      <p className="text-sm font-bold">{text}</p>
     </button>
   );
 };

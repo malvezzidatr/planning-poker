@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import socket from "@/lib/socket";
+import { useRoomStore } from "@/store/roomStore";
 
 type User = {
   username: string;
@@ -23,19 +24,102 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
   const [averageVotes, setAverageVotes] = useState(0);
   const [mostVoted, setMostVoted] = useState(0);
+  const [currentStory, setCurrentStory] = useState<number>(0);
+  const [roomIsFinished, setRoomIsFinished] = useState<boolean>(false);
+  const { name, userStories, deck, settings } = useRoomStore();
+  const [hydrated, setHydrated] = useState(false);
+  const [stories, setStories] = useState<string[]>([]);
+  const [timerDuration, setTimerDuration] = useState<number>(0);
+  const [timerRunning, setTimerRunning] = useState<boolean>(false);
+  const [timerStartedAt, setTimerStartedAt] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
-    const lastRoom = localStorage.getItem("room");
-    if (storedUsername && roomId === lastRoom) {
-      setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: true });
+    intervalRef.current = setInterval(() => {
+      if (!timerStartedAt) return;
+      const elapsed = Math.floor((Date.now() - timerStartedAt) / 1000);
+      const remaining = Math.max(0, timerDuration - elapsed);
+      setTimeLeft(remaining);
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleTimerState = (payload: { duration: number; running: boolean; startedAt: number | null; serverTime: number }) => {
+      const offset = Date.now() - (payload.serverTime ?? Date.now());
+      const duration = payload.duration ?? 0;
+      const running = Boolean(payload.running);
+      const startedAtClient = payload.startedAt ? payload.startedAt + offset : null;
+
+      setTimerDuration(duration);
+      setTimerRunning(running);
+      setTimerStartedAt(startedAtClient);
+
+      if (running && startedAtClient) {
+        const elapsed = Math.floor((Date.now() - startedAtClient) / 1000);
+        setTimeLeft(Math.max(0, duration - elapsed));
+      } else {
+        setTimeLeft(duration);
+      }
+    };
+
+    socket.on("timerState", handleTimerState);
+    return () => {
+      socket.off("timerState", handleTimerState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (useRoomStore.getState().name) setHydrated(true);
+    if (name === "") setHydrated(true);
+    if (name) setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const localName = localStorage.getItem("username");
+    const finalUsername = name || localName;
+
+    if (finalUsername) {
+      setUsername(finalUsername);
+      socket.emit("joinRoom", {
+        roomId,
+        username: finalUsername,
+        role: "player",
+        admin: !localName && !!name,
+        time: settings.enableTimer && Number(settings.timer)
+      });
+      setIsLoading(false);
     } else {
       setIsOpenModalJoinRoom(true);
       setIsLoading(false);
     }
-  }, [roomId]);
+  }, [hydrated, name, roomId]);
+
+  useEffect(() => {
+    socket.emit("addUserStories", {
+      roomId,
+      userStories,
+    })
+  }, []);
+
+  useEffect(() => {
+    const handleUserStoriesUpdate = (stories: string[]) => {
+      setStories(stories);
+    };
+
+    socket.on("userStoriesUpdate", handleUserStoriesUpdate);
+
+    return () => {
+      socket.off("userStoriesUpdate", handleUserStoriesUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }) => {
@@ -57,8 +141,8 @@ export function useRoom(roomId: string | string[] | undefined) {
   }, [username]);
 
   useEffect(() => {
+    if (!roomId) return
     const handleRoomUpdate = (users: User[]) => {
-      console.log(users)
       setUsers(users);
       setIsLoading(false);
     };
@@ -68,7 +152,7 @@ export function useRoom(roomId: string | string[] | undefined) {
     return () => {
       socket.off("roomUpdate", handleRoomUpdate);
     };
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     return () => {
@@ -174,12 +258,23 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   const joinRoom = (username: string, role: "player" | "spectator") => {
     localStorage.setItem("username", username);
-    localStorage.setItem("room", roomId as string);
-    localStorage.setItem("role", role);
     setUsername(username);
-    socket.emit("joinRoom", { roomId: roomId, username, role });
+    socket.emit("joinRoom", { roomId: roomId, username, role, admin: false });
     setIsOpenModalJoinRoom(false);
   };
+
+  const nextStory = () => {
+    setCurrentStory(prev => prev + 1);
+    resetVotes();
+  }
+
+  const handleFinishSession = () => {
+    setRoomIsFinished(true);
+  }
+
+  const handleCloseFinishModal = () => {
+    setRoomIsFinished(false);
+  }
 
   const userIsSpectator = users.some(user => user.username === username && user.role === 'spectator');
   const playerUsers = users.filter(user => user.role === 'player');
@@ -215,5 +310,18 @@ export function useRoom(roomId: string | string[] | undefined) {
     userIsSpectator,
     handleChangeRole,
     currentUser,
+    userStories,
+    currentStory,
+    nextStory,
+    handleFinishSession,
+    roomIsFinished,
+    handleCloseFinishModal,
+    stories,
+    hasTimer: timerDuration > 0,
+    time: timerDuration || Number(settings.timer),
+    timerRunning,
+    timerStartedAt,
+    socket,
+    timeLeft,
   };
 }
