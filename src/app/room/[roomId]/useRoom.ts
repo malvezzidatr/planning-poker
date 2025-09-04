@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import socket from "@/lib/socket";
+import { useRoomStore } from "@/store/roomStore";
 
 type User = {
   username: string;
@@ -23,34 +24,49 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [isOpenModalJoinRoom, setIsOpenModalJoinRoom] = useState(false);
   const [averageVotes, setAverageVotes] = useState(0);
   const [mostVoted, setMostVoted] = useState(0);
-  const [userStories, setUserStories] = useState<{ description: string }[]>([]);
   const [currentStory, setCurrentStory] = useState<number>(0);
   const [roomIsFinished, setRoomIsFinished] = useState<boolean>(false);
+  const { name, userStories, deck, settings } = useRoomStore();
+  const [hydrated, setHydrated] = useState(false);
+  const [stories, setStories] = useState<string[]>([]);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
-    const lastRoom = localStorage.getItem("room");
-    const stories = JSON.parse(localStorage.getItem("userStories") || "[]");
-    const isAdmin = localStorage.getItem(`admin_${roomId}`) === "true";
+    if (useRoomStore.getState().name) setHydrated(true);
+    if (name === "") setHydrated(true);
+    if (name) setHydrated(true);
+  }, []);
 
-    if (storedUsername && roomId === lastRoom) {
-      setUsername(storedUsername);
-      socket.emit("joinRoom", { roomId, username: storedUsername, role, admin: isAdmin });
+  useEffect(() => {
+    if (!hydrated) return;
 
-      if (stories.length > 0) {
-        socket.emit("addUserStories", { roomId, userStories: stories });
-      }
+    const localName = localStorage.getItem("username");
+    const finalUsername = name || localName;
+
+    if (finalUsername) {
+      setUsername(finalUsername);
+      socket.emit("joinRoom", {
+        roomId,
+        username: finalUsername,
+        role: "player",
+        admin: !localName && !!name,
+      });
+      setIsLoading(false);
     } else {
       setIsOpenModalJoinRoom(true);
       setIsLoading(false);
     }
-  }, [roomId]);
+  }, [hydrated, name, roomId]);
 
   useEffect(() => {
-    const handleUserStoriesUpdate = (stories: { description: string }[]) => {
-      setUserStories(stories);
-      localStorage.setItem("userStories", JSON.stringify(stories));
+    socket.emit("addUserStories", {
+      roomId,
+      userStories,
+    })
+  }, []);
+
+  useEffect(() => {
+    const handleUserStoriesUpdate = (stories: string[]) => {
+      setStories(stories);
     };
 
     socket.on("userStoriesUpdate", handleUserStoriesUpdate);
@@ -80,7 +96,9 @@ export function useRoom(roomId: string | string[] | undefined) {
   }, [username]);
 
   useEffect(() => {
+    if (!roomId) return
     const handleRoomUpdate = (users: User[]) => {
+      console.log(users)
       setUsers(users);
       setIsLoading(false);
     };
@@ -90,7 +108,7 @@ export function useRoom(roomId: string | string[] | undefined) {
     return () => {
       socket.off("roomUpdate", handleRoomUpdate);
     };
-  }, []);
+  }, [roomId]);
 
   useEffect(() => {
     return () => {
@@ -196,10 +214,8 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   const joinRoom = (username: string, role: "player" | "spectator") => {
     localStorage.setItem("username", username);
-    localStorage.setItem("room", roomId as string);
-    localStorage.setItem("role", role);
     setUsername(username);
-    socket.emit("joinRoom", { roomId: roomId, username, role });
+    socket.emit("joinRoom", { roomId: roomId, username, role, admin: false });
     setIsOpenModalJoinRoom(false);
   };
 
@@ -256,5 +272,8 @@ export function useRoom(roomId: string | string[] | undefined) {
     handleFinishSession,
     roomIsFinished,
     handleCloseFinishModal,
+    stories,
+    hasTimer: settings.enableTimer,
+    time: Number(settings.timer),
   };
 }

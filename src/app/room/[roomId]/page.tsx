@@ -14,6 +14,7 @@ import { useRoom } from "./useRoom";
 import { Footer } from "@/components/Footer/footer";
 import Badge from "@/components/Badge/Badge";
 import { SessionCompleteModal } from "@/components/SessionCompleteModal/SessionCompleteModal";
+import { Timer } from "@/components/Timer/Timer";
 
 export default function RoomPage() {
   const { roomId } = useParams();
@@ -44,6 +45,8 @@ export default function RoomPage() {
     roomIsFinished,
     handleFinishSession,
     handleCloseFinishModal,
+    hasTimer,
+    time,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -59,7 +62,12 @@ export default function RoomPage() {
     <>
       <Header />
       <div className="min-h-screen bg-[#F9FAFB] px-4 sm:px-18 pb-8 flex">
-        <div className="w-full mx-auto mt-10 md:mt-20 text-black rounded-lg">
+        <div className="w-full mx-auto mt-10 md:mt-20 flex flex-col text-black rounded-lg">
+          {hasTimer && (
+            <div className="self-end mb-4 flex gap-4 items-center">
+              <Timer initialTime={time} />
+            </div>
+          )}
           <div className="bg-white p-6 rounded-lg shadow-md flex justify-between items-center">
             <p className="font-bold text-2xl">Room: <span className="text-blue-500 font-bold">{roomId}</span></p> 
             <Button onClick={copyLink} text="Copy room" iconName="copy" />
@@ -109,7 +117,7 @@ export default function RoomPage() {
                   {revealed ? <Badge text="Completed" bgColor="bg-green-200" textColor="text-green-800" /> : <Badge text="Voting" textColor="text-orange-800" bgColor="bg-orange-200" animate />}
                 </div>
                 <div className="w-full bg-green-100 rounded-lg p-4 border-[1px] border-green-400">
-                  <p className="text-gray-600">{userStories[currentStory]?.description}</p>
+                  <p className="text-gray-600">{userStories[currentStory]}</p>
                 </div>
               </div>
               {revealed && (

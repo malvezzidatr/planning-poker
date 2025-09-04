@@ -39,16 +39,6 @@ export const JoinSessionCardGroup = () => {
     });
   };
 
-  const createRoom = (username: string, role: 'player' | 'spectator', userStories: { description: string }[]) => {
-    const newRoomId = uuid().slice(0, 6);
-    router.push(`/room/${newRoomId}`);
-    localStorage.setItem("username", username);
-    localStorage.setItem("room", newRoomId);
-    localStorage.setItem("role", role);
-    localStorage.setItem(`admin_${newRoomId}`, "true");
-    localStorage.setItem("userStories", JSON.stringify(userStories))
-  };
-
   return (
     <>
       <AnimatePresence>
@@ -58,13 +48,6 @@ export const JoinSessionCardGroup = () => {
         <JoinSessionCard buttonBackgroundColor="blue" primaryColor="blue" buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
         <JoinSessionCard buttonBackgroundColor="green" primaryColor="green" buttonIconName="handTogether" onClick={joinRoom} iconName="groupOfUsers" description="Have a room code? Join your team's estimation session." title="Join Existing Room" buttonText="Join Room" input={{ value: roomCode, setValue: setRoomCode }} />
       </div>
-      {/* <CreateRoomModal
-        onClose={() => setIsCreateRoomModalOpen(false)}
-        isOpen={isCreateRoomModalOpen}
-        headerTitle="Create Room"
-        headerDescription="Set up your planning session and invite your team"
-        handlePress={createRoom}
-      /> */}
       <CreateRoomModalStepByStep isOpen={isCreateRoomModalOpen} closeModal={() => setIsCreateRoomModalOpen(false)} />
     </>
   )

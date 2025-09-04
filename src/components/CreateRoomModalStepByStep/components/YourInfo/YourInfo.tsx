@@ -7,13 +7,7 @@ import { signOut, signInWithPopup, User } from "firebase/auth";
 import { Alert } from "@/components/Alert/Alert";
 import { useRoomStore } from "@/store/roomStore";
 
-interface IYourInfoProps {
-  setName: React.Dispatch<SetStateAction<string>>;
-  name: string;
-}
-
-export const YourInfo = ({
-}: IYourInfoProps) => {
+export const YourInfo = () => {
   const [isPlayer, setIsPlayer] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const { name, setName, role, setRole } = useRoomStore();
@@ -30,7 +24,6 @@ export const YourInfo = ({
   const handleRoleChange = (role: "player" | "spectator") => {
     setRole(role);
   };
-
 
   const handleSignIn = async () => {
     try {

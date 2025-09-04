@@ -7,6 +7,10 @@ import { YourInfo } from "./components/YourInfo/YourInfo";
 import { UserStories } from "./components/UserStories/UserStories";
 import { DeckAndSettings } from "./components/DeckAndSettings/DeckAndSettings";
 import { Review } from "./components/Review/Review";
+import { v4 as uuid } from "uuid";
+import { useRouter } from "next/navigation";
+import socket from "@/lib/socket";
+import { useRoomStore } from "@/store/roomStore";
 
 interface ICreateRoomModalStepByStepProps {
   closeModal: () => void;
@@ -18,9 +22,9 @@ export const CreateRoomModalStepByStep = ({
   isOpen
 }: ICreateRoomModalStepByStepProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [userStories, setUserStories] = useState<string[]>([]);
-  const [name, setName] = useState<string>('');
-
+  const { name, role, userStories, deck, settings } = useRoomStore();
+  const router = useRouter();
+  
   if (!isOpen) return
   
   const nextStep = () => {
@@ -30,6 +34,12 @@ export const CreateRoomModalStepByStep = ({
   const previousStep = () => {
     setCurrentStep(prevState => prevState - 1);
   }
+
+  const createRoom = () => {
+    const roomId = uuid().slice(0, 7);
+    socket.emit("joinRoom", { roomId, username: name, role, admin: true });
+    router.push(`/room/${roomId}`);
+  };
 
   return (
     <div
@@ -44,7 +54,7 @@ export const CreateRoomModalStepByStep = ({
         </div>
         {
           currentStep === 1 && (
-            <YourInfo setName={setName} name={name} />
+            <YourInfo />
           )
         }
         {
@@ -70,7 +80,7 @@ export const CreateRoomModalStepByStep = ({
             {currentStep !== 1 && (
               <Button onClick={previousStep} variant="secondary" text="Back" />
             )}
-            <Button onClick={nextStep} text={currentStep === 4 ? "Create Room" : "Next"} />
+            <Button onClick={currentStep === 4 ? createRoom : nextStep} text={currentStep === 4 ? "Create Room" : "Next"} />
           </div>
         </div>
       </div>
