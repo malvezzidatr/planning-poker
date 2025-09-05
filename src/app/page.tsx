@@ -49,7 +49,7 @@ export default function Home() {
           <h2 className="text-black sm:text-3xl font-bold mb-10 text-2xl text-center">Planning Poker Online – Frequently Asked Questions</h2>
           <div className="lg:w-2/3 flex flex-col gap-4 md:w-3/4 w-5/6">
             {
-              faq.map((item) => (
+              faq?.map((item) => (
                 <Accordion questionSize="MD" key={item.question} question={item.question} answer={item.answer} />
               ))
             }

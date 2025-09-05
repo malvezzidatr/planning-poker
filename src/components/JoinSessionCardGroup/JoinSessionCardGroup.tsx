@@ -2,17 +2,24 @@
 
 import { useRouter } from "next/navigation";
 import { JoinSessionCard } from "../JoinSessionCard/JoinSessionCard"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toast } from "../Toast/Toast";
 import { AnimatePresence } from "framer-motion";
-import socket from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 import { CreateRoomModalStepByStep } from "../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
+import { Socket } from "socket.io-client";
 
 export const JoinSessionCardGroup = () => {
   const [roomCode, setRoomCode] = useState<string>("");
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [socket, setSocket] = useState<Socket | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const s = getSocket();
+    setSocket(s);
+  }, []);
 
   const joinRoom = async () => {
     if (!roomCode.trim()) {
@@ -30,8 +37,8 @@ export const JoinSessionCardGroup = () => {
 
   const checkIfRoomExists = (roomId: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      socket.emit("checkIfRoomExists", { roomId });
-      socket.once("checkIfRoomExistsResponse", ({ exists }) => {
+      socket?.emit("checkIfRoomExists", { roomId });
+      socket?.once("checkIfRoomExistsResponse", ({ exists }: { exists: boolean }) => {
         resolve(exists);
       });
     });

@@ -72,9 +72,9 @@ export default function RoomPage() {
                 duration={timeLeft}
                 running={timerRunning}
                 startedAt={timerStartedAt}
-                onStart={() => socket.emit('startTimer', { roomId, duration: Number(time) })}
-                onPause={() => socket.emit('pauseTimer', { roomId })}
-                onReset={() => socket.emit('resetTimer', { roomId, duration: Number(time) })}
+                onStart={() => socket?.emit('startTimer', { roomId, duration: Number(time) })}
+                onPause={() => socket?.emit('pauseTimer', { roomId })}
+                onReset={() => socket?.emit('resetTimer', { roomId, duration: Number(time) })}
               />
             </div>
           )}
