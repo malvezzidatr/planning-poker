@@ -258,12 +258,12 @@ export default function RoomPage() {
                     />
                     <Button
                       full
-                      text={(currentStory + 1) >= userStories.length ? "Finish" : "Next Story"}
-                      onClick={(currentStory + 1) >= userStories.length ? handleFinishSession : nextStory}
-                      iconName="doubleArrowRight"
+                      text={(currentStory + 1) >= userStories.length ? "Last story" : "Next Story"}
+                      onClick={nextStory}
+                      iconName={(currentStory + 1) >= userStories.length ? "infoCircle": "arrowRight"}
                       variant="secondary"
                       backgroundColor="green"
-                      disabled={!revealed}
+                      disabled={!revealed || (currentStory + 1) >= userStories.length}
                     />
                   </div>
                 )
