@@ -35,7 +35,7 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
+  
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       if (!timerStartedAt) return;
@@ -82,18 +82,19 @@ export function useRoom(roomId: string | string[] | undefined) {
 
   useEffect(() => {
     if (!hydrated) return;
-
     const localName = localStorage.getItem("username");
     const finalUsername = name || localName;
 
     if (finalUsername) {
+      console.log(userStories)
       setUsername(finalUsername);
       socket.emit("joinRoom", {
         roomId,
         username: finalUsername,
         role: "player",
         admin: !localName && !!name,
-        time: settings.enableTimer && Number(settings.timer)
+        time: settings.enableTimer && Number(settings.timer),
+        stories: userStories,
       });
       setIsLoading(false);
     } else {
@@ -101,13 +102,6 @@ export function useRoom(roomId: string | string[] | undefined) {
       setIsLoading(false);
     }
   }, [hydrated, name, roomId]);
-
-  useEffect(() => {
-    socket.emit("addUserStories", {
-      roomId,
-      userStories,
-    })
-  }, []);
 
   useEffect(() => {
     const handleUserStoriesUpdate = (stories: string[]) => {

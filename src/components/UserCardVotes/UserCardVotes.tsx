@@ -36,13 +36,13 @@ export const UserCardVotes = ({
       </div>
       <div
         className={`p-4 w-16 h-20 flex items-center justify-center bg-white rounded-lg shadow-md ${
-          isCurrentUser ? "border-[2px] border-blue-500" : ""
+          isCurrentUser ? "border-[2px] border-gray-900" : ""
         }`}
       >
         {vote ? (
           <p
             className={`text-3xl font-bold ${
-              isCurrentUser ? "text-blue-500" : "text-gray-500"
+              isCurrentUser ? "text-gray-900" : "text-gray-500"
             }`}
           >
             {vote}

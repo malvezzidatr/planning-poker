@@ -17,7 +17,7 @@ export const UserCard = ({
   admin,
 }: IUserCardProps) => {
   return (
-    <div className={`flex w-full justify-between bg-[#F9FAFB] items-center p-4 rounded-lg shadow-xs ${isCurrentUser ? 'border-[1px] border-blue-500 bg-blue-50' : ''}`}>
+    <div className={`flex w-full justify-between text-black items-center p-4 rounded-lg shadow-xs ${isCurrentUser ? 'border border-gray-500 bg-gray-100' : 'bg-white'}`}>
       <div className="flex items-center">
         <Avatar name={username} size={40} />
         <div className="ml-3">

@@ -37,7 +37,7 @@ export const CreateRoomModalStepByStep = ({
 
   const createRoom = () => {
     const roomId = uuid().slice(0, 7);
-    socket.emit("joinRoom", { roomId, username: name, role, admin: true });
+    // socket.emit("joinRoom", { roomId, username: name, role, admin: true });
     router.push(`/room/${roomId}`);
   };
 
