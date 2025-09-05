@@ -1,12 +1,12 @@
 "use client"
 
 import { useRouter } from "next/navigation";
-import { JoinSessionCard } from "../JoinSessionCard/JoinSessionCard"
+import { JoinSessionCard } from "../../../JoinSessionCard/JoinSessionCard"
 import { useEffect, useState } from "react";
-import { Toast } from "../Toast/Toast";
+import { Toast } from "../../../Toast/Toast";
 import { AnimatePresence } from "framer-motion";
 import { getSocket } from "@/lib/socket";
-import { CreateRoomModalStepByStep } from "../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
+import { CreateRoomModalStepByStep } from "../../../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
 import { Socket } from "socket.io-client";
 
 const JoinSessionCardGroup = () => {

@@ -1,16 +1,11 @@
 import Header from "@/components/Header/Header";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { HelpfulCard } from "@/components/HelpfulCard/HelpfulCard";
 import { Footer } from "@/components/Footer/footer";
 import Head from "next/head";
 import { Accordion } from "@/components/Accordion/Accordion";
 import { faq } from "@/texts/faq";
-
-const JoinSessionCardGroup = dynamic(
-  () => import("@/components/JoinSessionCardGroup/JoinSessionCardGroup"),
-  { ssr: false }
-);
+import JoinSessionCardGroupWrapper from "@/components/JoinSessionCardGroupWrapper/JoinSessionCardGroupWrapper";
 
 export default function Home() {
   return (
@@ -26,7 +21,7 @@ export default function Home() {
             <h1 className="text-gray-900 font-bold sm:text-5xl mb-4 text-3xl">Planning Poker Online Free App for Scrum Teams</h1>
             <h2 className="text-[#4B5563] sm:text-xl w-11/12 text-md">Planning Poker is a consensus-based estimation technique for Agile/Scrum teams. Estimate the effort or relative size of user stories in a fun and effective way.</h2>
             {/* CSR Component */}
-            <JoinSessionCardGroup />
+            <JoinSessionCardGroupWrapper />
           </div>
           <Image className="rounded-lg hidden lg:block" width={450} height={450} alt="Illustration of Planning Poker estimation session" src={'/Image_home.png'} />
         </div>
