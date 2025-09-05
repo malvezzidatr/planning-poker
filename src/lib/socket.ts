@@ -19,10 +19,10 @@ export const getSocket = () => {
   if (!socket && typeof window !== "undefined") {
     socket = io(
       // 🌍 Produção
-      // "https://planning-poker-server-55kj.onrender.com/",
+      "https://planning-poker-server-55kj.onrender.com/",
       
       // 💻 Local (descomente essa linha se quiser rodar localmente)
-      "http://localhost:3001/",
+      // "http://localhost:3001/",
 
       {
         transports: ["websocket"],
