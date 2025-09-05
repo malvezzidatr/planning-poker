@@ -1,11 +1,16 @@
 import Header from "@/components/Header/Header";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { HelpfulCard } from "@/components/HelpfulCard/HelpfulCard";
 import { Footer } from "@/components/Footer/footer";
 import Head from "next/head";
-import { JoinSessionCardGroup } from "@/components/JoinSessionCardGroup/JoinSessionCardGroup";
 import { Accordion } from "@/components/Accordion/Accordion";
 import { faq } from "@/texts/faq";
+
+const JoinSessionCardGroup = dynamic(
+  () => import("@/components/JoinSessionCardGroup/JoinSessionCardGroup"),
+  { ssr: false }
+);
 
 export default function Home() {
   return (

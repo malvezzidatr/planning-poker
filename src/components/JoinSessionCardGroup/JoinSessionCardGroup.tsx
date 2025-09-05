@@ -9,7 +9,7 @@ import { getSocket } from "@/lib/socket";
 import { CreateRoomModalStepByStep } from "../CreateRoomModalStepByStep/CreateRoomModalStepByStep";
 import { Socket } from "socket.io-client";
 
-export const JoinSessionCardGroup = () => {
+const JoinSessionCardGroup = () => {
   const [roomCode, setRoomCode] = useState<string>("");
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -57,3 +57,5 @@ export const JoinSessionCardGroup = () => {
     </>
   )
 }
+
+export default JoinSessionCardGroup;
