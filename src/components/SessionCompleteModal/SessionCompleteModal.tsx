@@ -22,7 +22,7 @@ export const SessionCompleteModal = ({
             <Icon name="check" />
           </div>
           <h3 className="mb-2 text-2xl">Session Complete!</h3>
-          <p className="text-gray-500">Great job! You've successfully estimated all user stories.</p>
+          <p className="text-gray-500">Great job! You&apos;ve successfully estimated all user stories.</p>
           <div className="w-full bg-blue-100 p-6 rounded-lg mt-10">
             <h4 className="mb-5">Session Summary</h4>
             <div className="flex items-center justify-between px-18">
