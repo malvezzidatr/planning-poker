@@ -10,6 +10,12 @@ import { useRoomStore } from "@/store/roomStore";
 export const YourInfo = () => {
   const [user, setUser] = useState<User | null>(null);
   const { name, setName, role, setRole } = useRoomStore();
+  
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN)
+    console.log(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID)
+    console.log(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET)
+  }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
