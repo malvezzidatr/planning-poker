@@ -9,7 +9,7 @@ let socket: Socket | null = null;
 //   timeout: 5000,
 // });
 
-const socketSSR = io("https://planning-poker-server-55kj.onrender.com/", {
+export const socketSSR = io("https://planning-poker-server-55kj.onrender.com/", {
   transports: ["websocket"],
   reconnectionAttempts: 3,
   timeout: 5000,
