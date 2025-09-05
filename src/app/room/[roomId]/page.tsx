@@ -50,6 +50,7 @@ export default function RoomPage() {
     timerStartedAt,
     timeLeft,
     stories,
+    currentStoryIndex,
   } = useRoom(roomId);
   const router = useRouter();
 
@@ -72,9 +73,9 @@ export default function RoomPage() {
                 duration={timeLeft}
                 running={timerRunning}
                 startedAt={timerStartedAt}
-                onStart={() => socket?.emit('startTimer', { roomId, duration: Number(time) })}
-                onPause={() => socket?.emit('pauseTimer', { roomId })}
-                onReset={() => socket?.emit('resetTimer', { roomId, duration: Number(time) })}
+                onStart={() => socket.emit('startTimer', { roomId, duration: Number(time) })}
+                onPause={() => socket.emit('pauseTimer', { roomId })}
+                onReset={() => socket.emit('resetTimer', { roomId, duration: Number(time) })}
               />
             </div>
           )}
@@ -114,9 +115,9 @@ export default function RoomPage() {
               <div className="bg-white w-full rounded-lg shadow-sm p-6 mb-8">
                 <div className="flex justify-between items-center mb-4">
                   <p>Story progress</p>
-                  <p><span className="text-green-500">{currentStory + 1} </span>of {stories.length}</p>
+                  <p><span className="text-green-500">{currentStoryIndex + 1} </span>of {stories.length}</p>
                 </div>
-                <ProgressBar value={(((currentStory + 1) / stories.length) * 100) || 0} color="bg-gray-900" />
+                <ProgressBar value={(((currentStoryIndex + 1) / stories.length) * 100) || 0} color="bg-gray-900" />
               </div>
               <div className="bg-white w-full flex flex-col rounded-lg shadow-sm p-6 mb-8">
                 <div className="flex w-full items-center justify-between mb-4">
@@ -127,7 +128,7 @@ export default function RoomPage() {
                   {revealed ? <Badge text="Completed" bgColor="bg-green-200" textColor="text-green-800" /> : <Badge text="Voting" textColor="text-orange-800" bgColor="bg-orange-200" animate />}
                 </div>
                 <div className="w-full bg-gray-100 rounded-lg p-4 border-[1px] border-gray-900">
-                  <p className="text-gray-900">{stories[currentStory]}</p>
+                  <p className="text-gray-900">{stories[currentStoryIndex]}</p>
                 </div>
               </div>
               {revealed && (

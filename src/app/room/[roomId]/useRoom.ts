@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRoomStore } from "@/store/roomStore";
-import { getSocket } from "@/lib/socket";
-import { Socket } from "socket.io-client";
+import { socketSSR } from "@/lib/socket";
 
 type User = {
   username: string;
@@ -34,14 +33,25 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [timerRunning, setTimerRunning] = useState<boolean>(false);
   const [timerStartedAt, setTimerStartedAt] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [socket, setSocket] = useState<Socket | null>(null);
-
-  useEffect(() => {
-    const s = getSocket();
-    setSocket(s);
-  }, []);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+
+  useEffect(() => {
+    socketSSR.on('userStoriesUpdate', (updatedStories: string[]) => {
+      setStories(updatedStories);
+    });
+
+    socketSSR.on('currentStoryUpdate', (index: number) => {
+      setCurrentStoryIndex(index);
+    });
+
+    return () => {
+      socketSSR.off('userStoriesUpdate');
+      socketSSR.off('currentStoryUpdate');
+    };
+  }, []);
   
   useEffect(() => {
     intervalRef.current = setInterval(() => {
@@ -75,9 +85,9 @@ export function useRoom(roomId: string | string[] | undefined) {
       }
     };
 
-    socket?.on("timerState", handleTimerState);
+    socketSSR.on("timerState", handleTimerState);
     return () => {
-      socket?.off("timerState", handleTimerState);
+      socketSSR.off("timerState", handleTimerState);
     };
   }, []);
 
@@ -93,9 +103,8 @@ export function useRoom(roomId: string | string[] | undefined) {
     const finalUsername = name || localName;
 
     if (finalUsername) {
-      console.log(userStories)
       setUsername(finalUsername);
-      socket?.emit("joinRoom", {
+      socketSSR.emit("joinRoom", {
         roomId,
         username: finalUsername,
         role: "player",
@@ -115,15 +124,16 @@ export function useRoom(roomId: string | string[] | undefined) {
       setStories(stories);
     };
 
-    socket?.on("userStoriesUpdate", handleUserStoriesUpdate);
+    socketSSR.on("userStoriesUpdate", handleUserStoriesUpdate);
 
     return () => {
-      socket?.off("userStoriesUpdate", handleUserStoriesUpdate);
+      socketSSR.off("userStoriesUpdate", handleUserStoriesUpdate);
     };
   }, []);
 
   useEffect(() => {
-    socket?.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }: { revealed: boolean; votes: Record<string, string>}) => {
+
+    socketSSR.on("roomState", ({ revealed: revealedFromServer, votes: votesFromServer }: { revealed: boolean; votes: Record<string, string>}) => {
       setRevealed(revealedFromServer);
       setVotes(votesFromServer);
 
@@ -137,7 +147,7 @@ export function useRoom(roomId: string | string[] | undefined) {
     });
 
     return () => {
-      socket?.off("roomState");
+      socketSSR.off("roomState");
     };
   }, [username]);
 
@@ -148,28 +158,28 @@ export function useRoom(roomId: string | string[] | undefined) {
       setIsLoading(false);
     };
 
-    socket?.on("roomUpdate", handleRoomUpdate);
+    socketSSR.on("roomUpdate", handleRoomUpdate);
 
     return () => {
-      socket?.off("roomUpdate", handleRoomUpdate);
+      socketSSR.off("roomUpdate", handleRoomUpdate);
     };
   }, [roomId]);
 
   useEffect(() => {
     return () => {
-      socket?.emit("leaveRoom");
+      socketSSR.emit("leaveRoom");
     };
   }, []);
 
   useEffect(() => {
-    socket?.on("revealVotes", ({ votes: voteMap, average, mostVoted }: { votes: Record<string, string>, average: string, mostVoted: number}) => {
+    socketSSR.on("revealVotes", ({ votes: voteMap, average, mostVoted }: { votes: Record<string, string>, average: string, mostVoted: number}) => {
       setVotes(voteMap);
       setRevealed(true);
       setAverageVotes(Number(average));
       setMostVoted(mostVoted);
     });
 
-    socket?.on("resetVotes", () => {
+    socketSSR.on("resetVotes", () => {
       setVotes(null);
       setCard("");
       setRevealed(false);
@@ -177,15 +187,15 @@ export function useRoom(roomId: string | string[] | undefined) {
       localStorage.removeItem("card");
     });
 
-    socket?.on("userVoted", (user: string) => {
+    socketSSR.on("userVoted", (user: string) => {
       setVotedUsers((prev) => new Set(prev).add(user));
     });
 
     return () => {
-      socket?.off("roomUpdate");
-      socket?.off("revealVotes");
-      socket?.off("resetVotes");
-      socket?.off("userVoted");
+      socketSSR.off("roomUpdate");
+      socketSSR.off("revealVotes");
+      socketSSR.off("resetVotes");
+      socketSSR.off("userVoted");
     };
   }, [roomId]);
 
@@ -201,29 +211,29 @@ export function useRoom(roomId: string | string[] | undefined) {
       }
     };
 
-    socket?.on("votesUpdate", handleVotesUpdate);
+    socketSSR.on("votesUpdate", handleVotesUpdate);
 
     return () => {
-      socket?.off("votesUpdate", handleVotesUpdate);
+      socketSSR.off("votesUpdate", handleVotesUpdate);
     };
   }, [username, card]);
 
   const submitVote = (value: string) => {
     setCard(value);
     localStorage.setItem("card", value);
-    socket?.emit("vote", { roomId, username, card: value });
+    socketSSR.emit("vote", { roomId, username, card: value });
   };
 
   const revealVotes = () => {
-    socket?.emit("reveal", roomId);
+    socketSSR.emit("reveal", roomId);
   };
 
   const resetVotes = () => {
-    socket?.emit("reset", roomId);
+    socketSSR.emit("reset", roomId);
   };
 
   const handleChangeRole = () => {
-    socket?.emit("changeUserRole", { roomId, username })
+    socketSSR.emit("changeUserRole", { roomId, username })
     setVotes((prev) => {
       if (!prev) return prev;
       const newVotes = { ...prev, [username]: "" };
@@ -253,19 +263,20 @@ export function useRoom(roomId: string | string[] | undefined) {
     if (!newUsername || newUsername.trim() === "") return;
     setUsername(newUsername);
     localStorage.setItem("username", newUsername);
-    socket?.emit("changeUsername", { roomId, oldUsername: username, newUsername });
+    socketSSR.emit("changeUsername", { roomId, oldUsername: username, newUsername });
     setShowUserModal(false);
   };
 
   const joinRoom = (username: string, role: "player" | "spectator") => {
     localStorage.setItem("username", username);
     setUsername(username);
-    socket?.emit("joinRoom", { roomId: roomId, username, role, admin: false });
+    socketSSR.emit("joinRoom", { roomId: roomId, username, role, admin: false });
     setIsOpenModalJoinRoom(false);
   };
 
   const nextStory = () => {
     setCurrentStory(prev => prev + 1);
+    socketSSR.emit("nextStory", { roomId });
     resetVotes();
   }
 
@@ -322,7 +333,8 @@ export function useRoom(roomId: string | string[] | undefined) {
     time: timerDuration || Number(settings.timer),
     timerRunning,
     timerStartedAt,
-    socket,
     timeLeft,
+    socket: socketSSR,
+    currentStoryIndex,
   };
 }

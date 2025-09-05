@@ -3,14 +3,26 @@ import { io, Socket } from "socket.io-client";
 
 let socket: Socket | null = null;
 
+export const socketSSR = io("http://localhost:3001/", {
+  transports: ["websocket"],
+  reconnectionAttempts: 3,
+  timeout: 5000,
+});
+
+// const socketSSR = io("https://planning-poker-server-55kj.onrender.com/", {
+//   transports: ["websocket"],
+//   reconnectionAttempts: 3,
+//   timeout: 5000,
+// });
+
 export const getSocket = () => {
   if (!socket && typeof window !== "undefined") {
     socket = io(
       // 🌍 Produção
-      "https://planning-poker-server-55kj.onrender.com/",
+      // "https://planning-poker-server-55kj.onrender.com/",
       
       // 💻 Local (descomente essa linha se quiser rodar localmente)
-      // "http://localhost:3001/",
+      "http://localhost:3001/",
 
       {
         transports: ["websocket"],
