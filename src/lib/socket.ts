@@ -1,16 +1,16 @@
 import { io } from "socket.io-client";
 
-// const socket = io("https://planning-poker-server-55kj.onrender.com/", {
-//   transports: ["websocket"],
-//   reconnectionAttempts: 3,
-//   timeout: 5000,
-// });
-
-const socket = io("http://localhost:3001/", {
+const socket = io("https://planning-poker-server-55kj.onrender.com/", {
   transports: ["websocket"],
   reconnectionAttempts: 3,
   timeout: 5000,
 });
+
+// const socket = io("http://localhost:3001/", {
+//   transports: ["websocket"],
+//   reconnectionAttempts: 3,
+//   timeout: 5000,
+// });
 
 socket.on("connect_error", (err) => {
   console.error("Erro de conexão:", err);

@@ -56,8 +56,7 @@ export default function Header() {
         <p className="cursor-pointer hover:border-b-[1px] transition" onClick={handleGoToTerms}>
           Terms of Use
         </p>
-
-        {user ? (
+        {/* {user ? (
           <div className="flex items-center gap-4">
             {user.photoURL && (
               <img src={user.photoURL} alt="profile" className="w-8 h-8 rounded-full" />
@@ -67,7 +66,7 @@ export default function Header() {
           </div>
         ) : (
           <Button iconName="google" text="Sign In" onClick={handleSignIn} />
-        )}
+        )} */}
       </div>
     </header>
   );
