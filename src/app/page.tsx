@@ -18,7 +18,7 @@ export default function Home() {
         <Header />
         <div className="bg-[#F3F8FE] xl:px-24 xl:py-24 mt-12 flex items-center lg:justify-between justify-center w-full sm:px-12 sm:py-12 px-6 py-6">
           <div className="lg:w-1/2 sm:w-3/4 w-full">
-            <h1 className="text-[#004593] font-bold sm:text-5xl mb-4 text-3xl">Planning Poker Online Free App for Scrum Teams</h1>
+            <h1 className="text-gray-900 font-bold sm:text-5xl mb-4 text-3xl">Planning Poker Online Free App for Scrum Teams</h1>
             <h2 className="text-[#4B5563] sm:text-xl w-11/12 text-md">Planning Poker is a consensus-based estimation technique for Agile/Scrum teams. Estimate the effort or relative size of user stories in a fun and effective way.</h2>
             {/* CSR Component */}
             <JoinSessionCardGroup />
@@ -26,7 +26,7 @@ export default function Home() {
           <Image className="rounded-lg hidden lg:block" width={450} height={450} alt="Illustration of Planning Poker estimation session" src={'/Image_home.png'} />
         </div>
         <div className="flex flex-col items-center mb-10 px-6 sm:px-12 lg:px-24">
-          <h2 className="sm:text-3xl text-blue-900 font-bold mb-6 text-2xl">
+          <h2 className="sm:text-3xl text-gray-900 font-bold mb-6 text-2xl">
             What is Planning Poker?
           </h2>
           <p className="text-[#4B5563] sm:text-lg text-md max-w-3xl text-center">

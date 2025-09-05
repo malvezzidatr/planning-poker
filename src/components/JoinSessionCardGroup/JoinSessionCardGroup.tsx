@@ -45,7 +45,7 @@ export const JoinSessionCardGroup = () => {
         {errorMessage && <Toast type="warning" iconName="attention" text={errorMessage} closable onClose={() => setErrorMessage("")} />}
       </AnimatePresence>
       <div className="flex lg:flex-row gap-5 mt-5 flex-col">
-        <JoinSessionCard buttonBackgroundColor="blue" primaryColor="blue" buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
+        <JoinSessionCard buttonIconName="plus" onClick={() => setIsCreateRoomModalOpen(true)} iconName="plus" description="Create a new room and invite your team to estimate together." title="Start New Session" buttonText="Create Room" />
         <JoinSessionCard buttonBackgroundColor="green" primaryColor="green" buttonIconName="handTogether" onClick={joinRoom} iconName="groupOfUsers" description="Have a room code? Join your team's estimation session." title="Join Existing Room" buttonText="Join Room" input={{ value: roomCode, setValue: setRoomCode }} />
       </div>
       <CreateRoomModalStepByStep isOpen={isCreateRoomModalOpen} closeModal={() => setIsCreateRoomModalOpen(false)} />

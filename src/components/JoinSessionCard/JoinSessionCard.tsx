@@ -15,7 +15,7 @@ interface JoinSessionCardProps {
   },
   buttonIconName: IconName;
   buttonBackgroundColor?: 'blue' | 'green' | 'red' | 'none';
-  primaryColor: 'blue' | 'green';
+  primaryColor?: 'blue' | 'green';
 }
 
 export const JoinSessionCard = ({
@@ -32,8 +32,8 @@ export const JoinSessionCard = ({
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm flex flex-col items-center lg:w-[280px]">
       <div className="flex items-center gap-2 w-full">
-        <div className={`p-3 rounded-lg ${primaryColor === 'blue' ? 'bg-blue-200' : 'bg-green-200'}`}>
-          <Icon size={16} name={iconName} color={primaryColor === 'blue' ? "#3B82F6" : "#10B981"} />
+        <div className={`p-3 rounded-lg ${primaryColor ? 'bg-green-200' : 'bg-gray-900'}`}>
+          <Icon size={16} name={iconName} color={primaryColor ? "#10B981" : "white"} />
         </div>
         <h2 className="text-black font-bold lg:text-lg text-sm">{title}</h2>
       </div>

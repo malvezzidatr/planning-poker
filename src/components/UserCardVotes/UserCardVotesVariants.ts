@@ -9,7 +9,7 @@ export const userCardVotes = tv({
       default: "bg-[#F9FAFB]",
     },
     isCurrentUser: {
-      true: "border-[1px] border-blue-500 bg-blue-50",
+      true: "border-[1px] border-gray-900 bg-gray-100",
       false: "",
     },
   },

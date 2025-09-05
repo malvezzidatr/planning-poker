@@ -22,7 +22,7 @@ export const CreateRoomModalStepByStep = ({
   isOpen
 }: ICreateRoomModalStepByStepProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const { name, role, userStories, deck, settings } = useRoomStore();
+  const { name, role, userStories } = useRoomStore();
   const router = useRouter();
   
   if (!isOpen) return
@@ -37,8 +37,17 @@ export const CreateRoomModalStepByStep = ({
 
   const createRoom = () => {
     const roomId = uuid().slice(0, 7);
-    socket.emit("joinRoom", { roomId, username: name, role, admin: true });
+    // socket.emit("joinRoom", { roomId, username: name, role, admin: true });
     router.push(`/room/${roomId}`);
+  };
+
+  const isNextDisabled = () => {
+    switch (currentStep) {
+      case 1:
+        return !name;
+      case 2:
+        return !userStories || userStories.length === 0;
+    }
   };
 
   return (
@@ -80,7 +89,7 @@ export const CreateRoomModalStepByStep = ({
             {currentStep !== 1 && (
               <Button onClick={previousStep} variant="secondary" text="Back" />
             )}
-            <Button onClick={currentStep === 4 ? createRoom : nextStep} text={currentStep === 4 ? "Create Room" : "Next"} />
+            <Button disabled={isNextDisabled()} onClick={currentStep === 4 ? createRoom : nextStep} text={currentStep === 4 ? "Create Room" : "Next"} />
           </div>
         </div>
       </div>

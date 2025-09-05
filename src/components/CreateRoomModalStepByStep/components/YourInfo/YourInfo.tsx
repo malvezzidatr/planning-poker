@@ -8,7 +8,6 @@ import { Alert } from "@/components/Alert/Alert";
 import { useRoomStore } from "@/store/roomStore";
 
 export const YourInfo = () => {
-  const [isPlayer, setIsPlayer] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const { name, setName, role, setRole } = useRoomStore();
 
@@ -18,8 +17,10 @@ export const YourInfo = () => {
   }, []);
 
   useEffect(() => {
-    setName(user?.displayName || "");
-  }, [user])
+    if (user?.displayName) {
+      setName(user.displayName);
+    }
+  }, [user]);
 
   const handleRoleChange = (role: "player" | "spectator") => {
     setRole(role);

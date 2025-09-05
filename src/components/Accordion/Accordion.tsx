@@ -40,7 +40,7 @@ export const Accordion = ({
         type="button"
         onClick={handleToggle}
         aria-expanded={isOpen}
-        className={`w-full p-4 flex justify-between items-center cursor-pointer transition ${noBackground ? "hover:bg-gray-100" : "hover:bg-blue-200"}`}
+        className={`w-full p-4 flex justify-between items-center cursor-pointer transition ${noBackground ? "hover:bg-gray-100" : "hover:bg-gray-200"}`}
       >
         <h3 className={accordionQuestionSize({ size: questionSize })}>{question}</h3>
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>

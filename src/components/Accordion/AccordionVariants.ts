@@ -1,7 +1,7 @@
 import { tv } from "tailwind-variants";
 
 export const accordion = tv({
-  base: "w-full bg-blue-100 rounded-lg overflow-hidden",
+  base: "w-full bg-white rounded-lg overflow-hidden border shadow",
   variants: {
     noBackground: {
       true: "bg-transparent",
