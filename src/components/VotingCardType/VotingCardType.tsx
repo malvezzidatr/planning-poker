@@ -7,7 +7,6 @@ interface IVotingCardType {
 }
 
 export const VotingCardType = ({
-  testID,
   type,
   description,
   active = true,

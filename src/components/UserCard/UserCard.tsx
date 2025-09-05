@@ -1,4 +1,3 @@
-import { GoVerified } from "react-icons/go";
 import Icon from "../Icon/Icon";
 import { Avatar } from "../Avatar/Avatar";
 import Badge from "../Badge/Badge";

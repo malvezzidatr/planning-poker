@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { SetStateAction } from "react";
 
 interface IToggleSwitchProps {
   enabled: boolean;

@@ -3,15 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 
 interface ITimerProps {
-  duration: number; // segundos (total)
+  duration: number;
   running: boolean;
-  startedAt: number | null; // ms timestamp do servidor ou null
-  onStart?: () => void; // handlers opcionais para botões
+  startedAt: number | null;
+  onStart?: () => void;
   onPause?: () => void;
   onReset?: () => void;
 }
 
-export const Timer = ({ duration, running, startedAt, onStart, onPause, onReset }: ITimerProps) => {
+export const Timer = ({ duration, running, startedAt, onStart, onReset }: ITimerProps) => {
   const [remaining, setRemaining] = useState<number>(duration);
   const intervalRef = useRef<number | null>(null);
 
@@ -60,9 +60,7 @@ export const Timer = ({ duration, running, startedAt, onStart, onPause, onReset 
   const handleStartClick = () => {
     if (onStart) onStart();
   };
-  const handlePauseClick = () => {
-    if (onPause) onPause();
-  };
+  
   const handleResetClick = () => {
     if (onReset) onReset();
   };

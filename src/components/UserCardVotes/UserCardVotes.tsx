@@ -1,5 +1,4 @@
 import Icon from "../Icon/Icon";
-import { UserCard } from "../UserCard/UserCard";
 import { userCardVotes } from "./UserCardVotesVariants";
 
 interface IUserCardVotesProps {

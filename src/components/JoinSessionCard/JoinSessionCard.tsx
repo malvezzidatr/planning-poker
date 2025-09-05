@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "../Button/Button";
 import Icon, { IconName } from "../Icon/Icon"
 import { Input } from "../Input/Input";

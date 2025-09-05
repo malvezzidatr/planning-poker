@@ -2,7 +2,7 @@ import { Footer } from "@/components/Footer/footer";
 import Header from "@/components/Header/Header";
 import { Summary } from "@/components/Summary/Summary";
 import { Terms } from "@/components/Terms/Terms";
-import { AccordionProvider, useAccordion } from "@/contexts/AccordionContext";
+import { AccordionProvider } from "@/contexts/AccordionContext";
 
 export const metadata = {
   title: 'Planning Poker App | Terms of Use',

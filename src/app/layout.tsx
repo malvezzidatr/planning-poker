@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://planningpokerapp.com.br"),
   title: "Planning Poker Online Free - Agile Estimation Tool for Scrum Teams",
   description: "Free Planning Poker online tool for Scrum and Agile teams. Estimate tasks collaboratively with real-time voting and team engagement.",
   icons: {

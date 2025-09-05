@@ -1,5 +1,3 @@
-// components/Badge.tsx
-import { tv } from "tailwind-variants";
 import { badge } from "./BadgeVariants";
 
 interface BadgeProps {

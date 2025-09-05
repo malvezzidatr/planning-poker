@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import socket from "@/lib/socket";
 import { useRoomStore } from "@/store/roomStore";
 
@@ -26,7 +26,7 @@ export function useRoom(roomId: string | string[] | undefined) {
   const [mostVoted, setMostVoted] = useState(0);
   const [currentStory, setCurrentStory] = useState<number>(0);
   const [roomIsFinished, setRoomIsFinished] = useState<boolean>(false);
-  const { name, userStories, deck, settings } = useRoomStore();
+  const { name, userStories, settings } = useRoomStore();
   const [hydrated, setHydrated] = useState(false);
   const [stories, setStories] = useState<string[]>([]);
   const [timerDuration, setTimerDuration] = useState<number>(0);

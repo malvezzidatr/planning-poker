@@ -3,8 +3,6 @@
 import { useRouter } from "next/navigation";
 import { JoinSessionCard } from "../JoinSessionCard/JoinSessionCard"
 import { useState } from "react";
-import { CreateRoomModal } from "../CreateRoomModal/CreateRoomModal";
-import { v4 as uuid } from "uuid";
 import { Toast } from "../Toast/Toast";
 import { AnimatePresence } from "framer-motion";
 import socket from "@/lib/socket";

@@ -9,7 +9,6 @@ import { DeckAndSettings } from "./components/DeckAndSettings/DeckAndSettings";
 import { Review } from "./components/Review/Review";
 import { v4 as uuid } from "uuid";
 import { useRouter } from "next/navigation";
-import socket from "@/lib/socket";
 import { useRoomStore } from "@/store/roomStore";
 
 interface ICreateRoomModalStepByStepProps {
@@ -22,7 +21,7 @@ export const CreateRoomModalStepByStep = ({
   isOpen
 }: ICreateRoomModalStepByStepProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const { name, role, userStories } = useRoomStore();
+  const { name, userStories } = useRoomStore();
   const router = useRouter();
   
   if (!isOpen) return
@@ -37,7 +36,6 @@ export const CreateRoomModalStepByStep = ({
 
   const createRoom = () => {
     const roomId = uuid().slice(0, 7);
-    // socket.emit("joinRoom", { roomId, username: name, role, admin: true });
     router.push(`/room/${roomId}`);
   };
 

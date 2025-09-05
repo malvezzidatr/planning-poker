@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon/Icon"
 import { Input } from "@/components/Input/Input"
 import { UserRoleCard } from "@/components/UserRoleCard/UserRoleCard";
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { auth, provider } from "@/lib/firebase";
 import { signOut, signInWithPopup, User } from "firebase/auth";
 import { Alert } from "@/components/Alert/Alert";

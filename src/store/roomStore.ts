@@ -78,7 +78,7 @@ export const useRoomStore = create<RoomStore>()(
     {
       name: "room-name-storage",
       partialize: (state) => ({ name: state.name }),
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => () => {
         console.log("hydrated!")
       }
     }

@@ -4,7 +4,7 @@ import { useRoomStore } from "@/store/roomStore";
 import { useEffect } from "react";
 
 export const DeckAndSettings = () => {
-  const { deck, setDeck, settings, toggleTimer, setTimer } = useRoomStore();
+  const { setDeck, settings, toggleTimer, setTimer } = useRoomStore();
   
   useEffect(() => {
     setDeck('Fibonacci');
