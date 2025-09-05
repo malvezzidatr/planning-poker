@@ -12,12 +12,6 @@ export const YourInfo = () => {
   const { name, setName, role, setRole } = useRoomStore();
   
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN)
-    console.log(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID)
-    console.log(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET)
-  }, []);
-
-  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
     return () => unsubscribe();
   }, []);
