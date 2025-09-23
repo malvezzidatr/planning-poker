@@ -245,29 +245,25 @@ export default function RoomPage() {
                   ))}
                 </div>
               </div>
-              {
-                currentUser?.admin && (
-                  <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
-                    <Button
-                      backgroundColor="blue"
-                      text={revealed ? "Revote" : "Reveal Votes"}
-                      onClick={revealed ? resetVotes : revealVotes}
-                      iconName={revealed ? "refresh" : "eye"}
-                      full
-                      disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
-                    />
-                    <Button
-                      full
-                      text={(currentStory + 1) >= stories.length ? "Last story" : "Next Story"}
-                      onClick={nextStory}
-                      iconName={(currentStory + 1) >= stories.length ? "infoCircle": "arrowRight"}
-                      variant="secondary"
-                      backgroundColor="green"
-                      disabled={!revealed || (currentStory + 1) >= stories.length}
-                    />
-                  </div>
-                )
-              }
+                <div className="bg-white w-full rounded-lg shadow-sm p-6 mt-8 flex gap-8">
+                  <Button
+                    backgroundColor="blue"
+                    text={revealed ? "Revote" : "Reveal Votes"}
+                    onClick={revealed ? resetVotes : revealVotes}
+                    iconName={revealed ? "refresh" : "eye"}
+                    full
+                    disabled={votedUsers.size !== playerUsers.length || playerUsers.length === 0}
+                  />
+                  <Button
+                    full
+                    text={(currentStory + 1) >= stories.length ? "Last story" : "Next Story"}
+                    onClick={nextStory}
+                    iconName={(currentStory + 1) >= stories.length ? "infoCircle": "arrowRight"}
+                    variant="secondary"
+                    backgroundColor="green"
+                    disabled={!revealed || (currentStory + 1) >= stories.length}
+                  />
+                </div>
             </div>
           </div>
         </div>
